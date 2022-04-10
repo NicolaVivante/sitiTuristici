@@ -3,7 +3,8 @@
 
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.9/firebase-app.js";
-import { getDatabase, ref, get, child, onValue } from "https://www.gstatic.com/firebasejs/9.6.9/firebase-database.js";
+import { getDatabase, ref, child, onValue, push } from "https://www.gstatic.com/firebasejs/9.6.9/firebase-database.js";
+import { Location } from "./test.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyDm5EynX5GYeJXF7VWZBO3IY0vjjRPl_hA",
@@ -17,40 +18,37 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-// get realtyme databse reference
-// self. to let firebase be global from other modules
-self.firebase = getDatabase(app);
-const dbRef = ref(firebase);
+// get realtime database reference
+// self. to let db be global from other modules
+self.db = getDatabase(app);
 
-function getAllLocations(locationsArray) {
-    let locationsRef = child(ref(firebase), 'locations');
-    onValue(locationsRef, (locations) => {
-        locations.forEach((location) => {
-            locationsArray.push(location.val());
-        });
-    });
+function onGetAllLocations(callBack) {
+    let locationsRef = ref(db, 'locations');
+    onValue(locationsRef, (locations) => callBack(locations.val()));
 }
 
-function arrayToJson(array) {
-    let jsonArray = {};
-    console.log(array.length);
-    for (let i = 0; i < array.length; i++) {
-        console.log(i);
+function displayLocations(locations) {
+    const locationsJSON = JSON.stringify(locations);
+    const output1 = document.getElementById("id01");
+    output1.innerHTML = locationsJSON;
+    for (let locationId in locations) {
+        // actually render the location
+        console.log(locationId + " --> " + locations[locationId]);
     }
 }
 
-const output1 = document.getElementById("id01");
-let allLocations = [];
-getAllLocations(allLocations);
-let arraySize = allLocations.length;
-console.log(allLocations);
-console.log(allLocations.length);
-console.log(arraySize);
-output1.innerHTML = JSON.stringify(allLocations);
+function addLocation(location) {
+    let locationsRef = ref(db, 'locations');
+    locationsRef.push().set(JSON.stringify(location));
+}
+
+onGetAllLocations(displayLocations);
+let newLocation = new Location("piazza", "sis");
+addLocation(newLocation);
 
 // recupera e stampa tutto il database in json
 const outdump = document.getElementById("dump-db");
-let dbRef2 = ref(firebase);
-onValue(dbRef2, snap => {
+let dbRef = ref(db);
+onValue(dbRef, snap => {
     outdump.innerHTML = JSON.stringify(snap.val(), null, 2);
 });  

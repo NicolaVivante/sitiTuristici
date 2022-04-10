@@ -1,4 +1,4 @@
-class Location {
+export class Location {
     name;
     location;
     reviewsCount;
