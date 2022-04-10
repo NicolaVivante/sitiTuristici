@@ -15,10 +15,12 @@ export class Location {
         return this.reviewsScoreSum / this.reviewsCount;
     }
 
+    // maybe remove
     getReviewsCount() {
         return this.reviewsCount;
     }
 
+    // maybe remove
     addReview(value) {
         if (value < 0 || value > 5) {
             throw new Error('Review score out of range');
@@ -27,6 +29,7 @@ export class Location {
         this.reviewsCount++;
     }
 
+    // maybe remove
     removeReview(value) {
         if (value < 0 || value > 5) {
             throw new Error('Review score out of range');
