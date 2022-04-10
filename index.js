@@ -36,13 +36,13 @@ class Location {
     }
 }
 
+// from google docs https://developers.google.com/maps/documentation/javascript/overview#maps_map_simple-javascript
+function initMap() {
+    map = new google.maps.Map(document.getElementById("map"), {
+        center: { lat: -34.397, lng: 150.644 },
+        zoom: 8,
+    });
+}
 
-test = new Location("sus", "sos");
-console.log(JSON.stringify(test));
-test.addReview(5);
-console.log(JSON.stringify(test));
-test.addReview(3);
-console.log(JSON.stringify(test));
-console.log(test.getAvgScore())
-test.removeReview(5);
+test = new Location("sos", { lat: -34.397, lng: 150.644 });
 console.log(JSON.stringify(test));
