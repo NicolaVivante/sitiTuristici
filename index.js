@@ -11,19 +11,11 @@ class Location {
         this.reviewsScoreSum = 0;
     }
 
-    get getName() {
-        return this.name;
-    }
-
-    get getLocation() {
-        return this.location;
-    }
-
-    get avgScore() {
+    getAvgScore() {
         return this.reviewsScoreSum / this.reviewsCount;
     }
 
-    get reviewsCount() {
+    getReviewsCount() {
         return this.reviewsCount;
     }
 
@@ -51,5 +43,6 @@ test.addReview(5);
 console.log(JSON.stringify(test));
 test.addReview(3);
 console.log(JSON.stringify(test));
+console.log(test.getAvgScore())
 test.removeReview(5);
 console.log(JSON.stringify(test));
