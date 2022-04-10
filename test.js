@@ -44,5 +44,5 @@ function initMap() {
     });
 }
 
-test = new Location("sos", { lat: -34.397, lng: 150.644 });
-console.log(JSON.stringify(test));
+// test = new Location("sos", { lat: -34.397, lng: 150.644 });
+// console.log(JSON.stringify(test));
