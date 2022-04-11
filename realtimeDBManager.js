@@ -30,6 +30,7 @@ export class RealtimeDBManager extends DBManager {
     // add given location to locations list and return the location id
     addLocation(location) {
         let locationsRef = ref(this.db, this.LOCATIONS_PATH);
+        location.clean();
         return push(locationsRef, location).key;
     }
 
@@ -43,11 +44,12 @@ export class RealtimeDBManager extends DBManager {
     #setLocation(locationId, location) {
         // set location at given id
         let locationRef = ref(this.db, this.LOCATIONS_PATH + "/" + locationId);
+        location.clean();
         set(locationRef, location);
     }
 
     // get location with given id, included reviews if specified
-    async getLocation(locationId, withReviews) {
+    async getLocation(locationId, withReviews, withUsers) {
         // retrieve location
         let locationRef = ref(this.db, this.LOCATIONS_PATH + "/" + locationId);
         let locationObj = (await get(locationRef)).val();
@@ -60,7 +62,7 @@ export class RealtimeDBManager extends DBManager {
 
         if (withReviews) {
             // add reviews
-            let reviews = await this.getReviewsOfLocation(locationId);
+            let reviews = await this.getReviewsOfLocation(locationId, withUsers);
             location.addReviews(reviews);
         }
 
@@ -75,25 +77,40 @@ export class RealtimeDBManager extends DBManager {
         locationsSnap.forEach(locationSnap => {
             let location = locationSnap.val()
             Object.setPrototypeOf(location, Location.prototype);
-            locations.push(locations);
+            location.addId(locationSnap.key);
+            locations.push(location);
         });
 
         return locations;
     }
 
-    // get all reviews of location with given id
-    async getReviewsOfLocation(locationId) {
+    async getAllReviews() {
         let reviewsRef = ref(this.db, this.REVIEWS_PATH);
         let allReviewsSnap = await get(reviewsRef);
-        let locationReviews = [];
+        let reviews = [];
+        allReviewsSnap.forEach(reviewSnap => {
+            let review = reviewSnap.val()
+            Object.setPrototypeOf(review, Review.prototype);
+            review.addId(reviewSnap.key);
+            reviews.push(review);
+        });
+
+        return reviews;
+    }
+
+    // get all reviews of location with given id
+    async getReviewsOfLocation(locationId, withUsers) {
+        //TODO: include user
+        let reviewsRef = ref(this.db, this.REVIEWS_PATH);
+        let allReviewsSnap = await get(reviewsRef);
+        let locationReviews = {};
         allReviewsSnap.forEach(reviewSnap => {
             let review = reviewSnap.val()
             Object.setPrototypeOf(review, Review.prototype);
             if(review.locationId == locationId) {
-                locationReviews.push(review);
+                locationReviews[reviewSnap.key] = (review);
             }
         });
-
         return locationReviews;
     }
 
@@ -109,6 +126,7 @@ export class RealtimeDBManager extends DBManager {
 
         // add review and return id
         let reviewsRef = ref(this.db, this.REVIEWS_PATH);
+        review.clean();
         return push(reviewsRef, review).key;
     }
 
@@ -129,4 +147,26 @@ export class RealtimeDBManager extends DBManager {
         // remove review
         remove(reviewsRef);
     }
+
+    async addUser() {
+
+    }
+
+    async getAllUsers() {
+
+    }
+
+    async getUser(userid, withReviews) {
+
+    }
+
+    orderLocationsByLetter(locations, flip) {}
+
+    orderLocationsByScore(locations, flip) {}
+
+    orderLocationsByReviewsCount(locations, flip) {}
+
+    orderReviewsByScore(reviews, flip) {}
+
+    orderReviewsByTime(reviews, flip) {}
 }

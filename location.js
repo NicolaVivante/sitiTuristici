@@ -11,6 +11,11 @@ export class Location {
         this.reviewsScoreSum = 0;
     }
 
+    clean() {
+        this["reviews"] = null;
+        this["id"] = null;
+    }
+
     getAvgScore() {
         return this.reviewsScoreSum / this.reviewsCount;
     }
@@ -23,15 +28,14 @@ export class Location {
         return this["reviews"];
     }
 
+    addId(id) {
+        this["id"] = id;
+    }
+
+    getId() {
+        return this["id"];
+    }
 }
 
-// from google docs https://developers.google.com/maps/documentation/javascript/overview#maps_map_simple-javascript
-function initMap() {
-    map = new google.maps.Map(document.getElementById("map"), {
-        center: "",
-        zoom: 8,
-    });
-}
 
-// test = new Location("sos", { lat: -34.397, lng: 150.644 });
-// console.log(JSON.stringify(test));
+  

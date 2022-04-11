@@ -16,4 +16,25 @@ export class Review {
         this.score = score;
         this.date = Date.now();
     }
+
+    clean() {
+        this["user"] = null;
+        this["id"] = null;
+    }
+
+    addUser(user) {
+        this["user"] = user;
+    }
+
+    getUser() {
+        return this["user"];
+    }
+
+    addId(id) {
+        this["id"] = id;
+    }
+
+    getId() {
+        return this["id"];
+    }
 }

@@ -45,5 +45,9 @@ await dbManager.removeReview(reviewId);
 
 let locationWith = await dbManager.getLocation(id, true);
 let locationWithout = await dbManager.getLocation(id, false);
+let allLocations = await dbManager.getAllLocations();
+let allReviews = await dbManager.getAllReviews();
 console.log(locationWith);
 console.log(locationWithout);
+console.log(allLocations);
+console.log(allReviews);
