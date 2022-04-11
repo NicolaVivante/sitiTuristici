@@ -18,25 +18,32 @@ export class DBManager {
     // set location at given id
     #setLocation(locationId, location) {}
 
-    // get location with given id
-    getLocation(locationId) {}
+    // get location with given id, with reviews if specified
+    async getLocation(locationId, withReviews, withUsers) {}
 
-    // return an array of all locations
-    getAllLocations() {}
+    // get all locations
+    async getAllLocations() {}
 
-    // get reviews with given location id
-    getReviewsOfLocation(locationId) {}
+    // get all reviews
+    async getAllReviews() {}
 
-    // get reviews from given user id
-    getReviewsOfUser(userId) {}
+    // get all reviews of location with given id with the user who created the review if specified
+    async getReviewsOfLocation(locationId, withUsers) {}
 
     // add given review to review list and return the review id
-    addReview(review) {}
+    async addReview(review) {}
 
-    // remove revierw at given id
-    removeReview(reviewId) {}
+    // remove review at given id
+    async removeReview(reviewId) {}
 
-    orderLocationsByLetter(locations, flip) {
+    // add given user to users list and return the id
+    addUser(user) {}
+
+    // get all users
+    async getAllUsers() {}
+
+    // order given locations by name, reverse array if specified
+    orderLocationsByName(locations, flip) {
         locations.sort(function(x, y) {
             return x.name.localeCompare(y.name);
         });
@@ -46,6 +53,7 @@ export class DBManager {
         }
     }
 
+    // order given locations by avarage score, reverse array if specified
     orderLocationsByScore(locations, flip) {
         locations.sort(function(x, y) {
             return y.getAvgScore() - x.getAvgScore();
@@ -56,6 +64,7 @@ export class DBManager {
         }
     }
 
+    // order given locations by number of reviews, reverse array if specified
     orderLocationsByReviewsCount(locations, flip) {
         locations.sort(function(x, y) {
             return y.reviewsCount - x.reviewsCount;
@@ -66,5 +75,25 @@ export class DBManager {
         }
     }
 
-    
+    // order given reviews by score, reverse array if specified
+    orderReviewsByScore(reviews, flip) {
+        reviews.sort(function(x, y) {
+            return y.score - x.score;
+        });
+
+        if (flip) {
+            reviews.reverse();
+        }
+    }
+
+    // order given reviews by less recent, reverse array if specified
+    orderReviewsByTime(reviews, flip) {
+        reviews.sort(function(x, y) {
+            return y.date - x.date;
+        });
+
+        if (flip) {
+            reviews.reverse();
+        }
+    }
 }

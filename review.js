@@ -9,7 +9,6 @@ export class Review {
         this.locationId = locationId;
         this.userId = userId;
         this.title = title;
-        //TODO: add score range check
         if (score < 0 || score > 5) {
             throw("Review score must be in [0-5] range");
         }

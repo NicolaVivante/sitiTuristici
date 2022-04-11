@@ -7,7 +7,6 @@ import { DBManager } from "./DBManager.js";
 import { Review } from "./review.js";
 import { Location } from "./location.js";
 
-
 export class RealtimeDBManager extends DBManager {
 
     db;
@@ -21,26 +20,22 @@ export class RealtimeDBManager extends DBManager {
         this.db = getDatabase(app);
     }
 
-    // call given callback each time db changes
     onDBChange(callBack) {
         let dbRef = ref(this.db);
         onValue(dbRef, snap => callBack(snap.val()));
     }
 
-    // add given location to locations list and return the location id
     addLocation(location) {
         let locationsRef = ref(this.db, this.LOCATIONS_PATH);
         location.clean();
         return push(locationsRef, location).key;
     }
 
-    // remove location at given id
     removeLocation(locationId) {
         let locationRef = ref(this.db, this.LOCATIONS_PATH + "/" + locationId);
         remove(locationRef);
     }
 
-    // set location at given id
     #setLocation(locationId, location) {
         // set location at given id
         let locationRef = ref(this.db, this.LOCATIONS_PATH + "/" + locationId);
@@ -48,7 +43,6 @@ export class RealtimeDBManager extends DBManager {
         set(locationRef, location);
     }
 
-    // get location with given id, included reviews if specified
     async getLocation(locationId, withReviews, withUsers) {
         // retrieve location
         let locationRef = ref(this.db, this.LOCATIONS_PATH + "/" + locationId);
@@ -69,7 +63,6 @@ export class RealtimeDBManager extends DBManager {
         return location;
     }
 
-    // get all locations
     async getAllLocations() {
         let locationsRef = ref(this.db, this.LOCATIONS_PATH);
         let locationsSnap = await get(locationsRef);
@@ -98,7 +91,6 @@ export class RealtimeDBManager extends DBManager {
         return reviews;
     }
 
-    // get all reviews of location with given id
     async getReviewsOfLocation(locationId, withUsers) {
         //TODO: include user
         let reviewsRef = ref(this.db, this.REVIEWS_PATH);
@@ -114,7 +106,6 @@ export class RealtimeDBManager extends DBManager {
         return locationReviews;
     }
 
-    // add given review to review list and return the review id
     async addReview(review) {
         // get location from review locationId
         let location = await this.getLocation(review.locationId, false);
@@ -130,7 +121,6 @@ export class RealtimeDBManager extends DBManager {
         return push(reviewsRef, review).key;
     }
 
-    // remove review at given id
     async removeReview(reviewId) {
         // get review from id
         let reviewsRef = ref(this.db, this.REVIEWS_PATH + "/" + reviewId);
@@ -159,9 +149,4 @@ export class RealtimeDBManager extends DBManager {
     async getUser(userid, withReviews) {
 
     }
-
-
-    orderReviewsByScore(reviews, flip) {}
-
-    orderReviewsByTime(reviews, flip) {}
 }
