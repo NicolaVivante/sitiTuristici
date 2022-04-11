@@ -148,7 +148,7 @@ export class RealtimeDBManager extends DBManager {
         remove(reviewsRef);
     }
 
-    async addUser() {
+    addUser(user) {
 
     }
 
@@ -160,11 +160,6 @@ export class RealtimeDBManager extends DBManager {
 
     }
 
-    orderLocationsByLetter(locations, flip) {}
-
-    orderLocationsByScore(locations, flip) {}
-
-    orderLocationsByReviewsCount(locations, flip) {}
 
     orderReviewsByScore(reviews, flip) {}
 
