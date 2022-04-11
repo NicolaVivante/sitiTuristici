@@ -35,4 +35,36 @@ export class DBManager {
 
     // remove revierw at given id
     removeReview(reviewId) {}
+
+    orderLocationsByLetter(locations, flip) {
+        locations.sort(function(x, y) {
+            return x.name.localeCompare(y.name);
+        });
+
+        if (flip) {
+            locations.reverse();
+        }
+    }
+
+    orderLocationsByScore(locations, flip) {
+        locations.sort(function(x, y) {
+            return y.getAvgScore() - x.getAvgScore();
+        });
+
+        if (flip) {
+            locations.reverse();
+        }
+    }
+
+    orderLocationsByReviewsCount(locations, flip) {
+        locations.sort(function(x, y) {
+            return y.reviewsCount - x.reviewsCount;
+        });
+
+        if (flip) {
+            locations.reverse();
+        }
+    }
+
+    
 }
