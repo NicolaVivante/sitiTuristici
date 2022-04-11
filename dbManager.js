@@ -1,70 +1,70 @@
-// documentation
-// https://firebase.google.com/docs/database/web/read-and-write
-
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.9/firebase-app.js";
-import { getDatabase, ref, onValue, push, set, remove } from "https://www.gstatic.com/firebasejs/9.6.9/firebase-database.js";
-
 export class DBManager {
-
-    db;
-    LOCATIONS_PATH = 'locations';
-    REVIEWS_PATH = 'reviews'
 
     constructor(firebaseConfig) {
         // initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        this.db = getDatabase(app);
+        //const app = initializeApp(firebaseConfig);
+        //this.db = getDatabase(app);
     }
 
     // call given callback each time db changes
-    onDBChange(callBack) {
-        let dbRef = ref(this.db);
-        onValue(dbRef, snap => callBack(snap.val()));
-    }
-
-    // call given callback each time the locations list changes
-    onLocationsChange(callBack) {
-        let locationsRef = ref(this.db, this.LOCATIONS_PATH);
-        onValue(locationsRef, locations => callBack(locations.val()));
-    }
+    onDBChange(callBack) {}
 
     // add given location to locations list and return the location id
-    addLocation(location) {
-        let locationsRef = ref(this.db, this.LOCATIONS_PATH);
-        return push(locationsRef, location).key;
-    }
+    addLocation(location) {}
 
     // remove location at given id
-    removeLocation(locationId) {
-        let locationRef = ref(this.db, this.LOCATIONS_PATH + "/" + locationId);
-        remove(locationRef);
-    }
+    removeLocation(locationId) {}
 
     // set location at given id
-    #setLocation(locationId, location) {
-        // set location at given id
-        let locationRef = ref(this.db, this.LOCATIONS_PATH + "/" + locationId);
-        set(locationRef, location);
-    }
+    #setLocation(locationId, location) {}
 
     // get location with given id
-    getLocation(locationId) {
-        let locationRef = ref(this.db, this.LOCATIONS_PATH + "/" + locationId);
-        return get(locationRef, location);
-    }
+    getLocation(locationId) {}
+
+    // return an array of all locations
+    getAllLocations() {}
+
+    // get reviews with given location id
+    getReviewsOfLocation(locationId) {}
+
+    // get reviews from given user id
+    getReviewsOfUser(userId) {}
 
     // add given review to review list and return the review id
-    addReview(review) {
-        // get location from review locationId
-        // update location scoreSum and reviewsCount
-        // set location at review locarionId
-
-        // add review
-        // return review id
-    }
+    addReview(review) {}
 
     // remove revierw at given id
-    removeReview(reviewId) {
-        // remove revierw at given id
+    removeReview(reviewId) {}
+
+    orderLocationsByLetter(locations, flip) {
+        locations.sort(function(x, y) {
+            return x.name.localeCompare(y.name);
+        });
+
+        if (flip) {
+            locations.reverse();
+        }
     }
+
+    orderLocationsByScore(locations, flip) {
+        locations.sort(function(x, y) {
+            return y.getAvgScore() - x.getAvgScore();
+        });
+
+        if (flip) {
+            locations.reverse();
+        }
+    }
+
+    orderLocationsByReviewsCount(locations, flip) {
+        locations.sort(function(x, y) {
+            return y.reviewsCount - x.reviewsCount;
+        });
+
+        if (flip) {
+            locations.reverse();
+        }
+    }
+
+    
 }

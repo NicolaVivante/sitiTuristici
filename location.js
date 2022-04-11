@@ -11,41 +11,31 @@ export class Location {
         this.reviewsScoreSum = 0;
     }
 
+    clean() {
+        this["reviews"] = null;
+        this["id"] = null;
+    }
+
     getAvgScore() {
         return this.reviewsScoreSum / this.reviewsCount;
     }
 
-    // maybe remove
-    getReviewsCount() {
-        return this.reviewsCount;
+    addReviews(reviews) {
+        this["reviews"] = reviews;
     }
 
-    // maybe remove
-    addReview(value) {
-        if (value < 0 || value > 5) {
-            throw new Error('Review score out of range');
-        }
-        this.reviewsScoreSum += value;
-        this.reviewsCount++;
+    getReviews() {
+        return this["reviews"];
     }
 
-    // maybe remove
-    removeReview(value) {
-        if (value < 0 || value > 5) {
-            throw new Error('Review score out of range');
-        }
-        this.reviewsScoreSum -= value;
-        this.reviewsCount--;
+    addId(id) {
+        this["id"] = id;
+    }
+
+    getId() {
+        return this["id"];
     }
 }
 
-// from google docs https://developers.google.com/maps/documentation/javascript/overview#maps_map_simple-javascript
-function initMap() {
-    map = new google.maps.Map(document.getElementById("map"), {
-        center: { lat: -34.397, lng: 150.644 },
-        zoom: 8,
-    });
-}
 
-// test = new Location("sos", { lat: -34.397, lng: 150.644 });
-// console.log(JSON.stringify(test));
+  
