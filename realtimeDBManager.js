@@ -4,6 +4,8 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.9/firebase-app.js";
 import { getDatabase, ref, onValue, get, push, set, remove } from "https://www.gstatic.com/firebasejs/9.6.9/firebase-database.js";
 import { DBManager } from "./DBManager.js";
+import { Review } from "./review.js";
+import { Location } from "./location.js";
 
 
 export class RealtimeDBManager extends DBManager {
@@ -25,12 +27,6 @@ export class RealtimeDBManager extends DBManager {
         onValue(dbRef, snap => callBack(snap.val()));
     }
 
-    // call given callback each time the locations list changes
-    onLocationsChange(callBack) {
-        let locationsRef = ref(this.db, this.LOCATIONS_PATH);
-        onValue(locationsRef, locations => callBack(locations.val()));
-    }
-
     // add given location to locations list and return the location id
     addLocation(location) {
         let locationsRef = ref(this.db, this.LOCATIONS_PATH);
@@ -50,27 +46,87 @@ export class RealtimeDBManager extends DBManager {
         set(locationRef, location);
     }
 
-    // get location with given id
-    async getLocation(locationId) {
+    // get location with given id, included reviews if specified
+    async getLocation(locationId, withReviews) {
+        // retrieve location
         let locationRef = ref(this.db, this.LOCATIONS_PATH + "/" + locationId);
-        let locationSnap = (await get(locationRef)).val();
-        Object.setPrototypeOf(location, Location.prototype);
+        let locationObj = (await get(locationRef)).val();
+        if (locationObj == null) {
+            throw(`Location with id ${locationId} not found`);
+        }
 
-        return locationSnap;
+        let location = new Location();
+        Object.assign(location, locationObj);
+
+        if (withReviews) {
+            // add reviews
+            let reviews = await this.getReviewsOfLocation(locationId);
+            location.addReviews(reviews);
+        }
+
+        return location;
+    }
+
+    // get all locations
+    async getAllLocations() {
+        let locationsRef = ref(this.db, this.LOCATIONS_PATH);
+        let locationsSnap = await get(locationsRef);
+        let locations = [];
+        locationsSnap.forEach(locationSnap => {
+            let location = locationSnap.val()
+            Object.setPrototypeOf(location, Location.prototype);
+            locations.push(locations);
+        });
+
+        return locations;
+    }
+
+    // get all reviews of location with given id
+    async getReviewsOfLocation(locationId) {
+        let reviewsRef = ref(this.db, this.REVIEWS_PATH);
+        let allReviewsSnap = await get(reviewsRef);
+        let locationReviews = [];
+        allReviewsSnap.forEach(reviewSnap => {
+            let review = reviewSnap.val()
+            Object.setPrototypeOf(review, Review.prototype);
+            if(review.locationId == locationId) {
+                locationReviews.push(review);
+            }
+        });
+
+        return locationReviews;
     }
 
     // add given review to review list and return the review id
-    addReview(review) {
+    async addReview(review) {
         // get location from review locationId
-        // update location scoreSum and reviewsCount
+        let location = await this.getLocation(review.locationId, false);
+        // update location data
+        location.reviewsCount++;
+        location.reviewsScoreSum += review.score;
         // set location at review locarionId
+        this.#setLocation(review.locationId, location);
 
-        // add review
-        // return review id
+        // add review and return id
+        let reviewsRef = ref(this.db, this.REVIEWS_PATH);
+        return push(reviewsRef, review).key;
     }
 
-    // remove revierw at given id
-    removeReview(reviewId) {
-        // remove revierw at given id
+    // remove review at given id
+    async removeReview(reviewId) {
+        // get review from id
+        let reviewsRef = ref(this.db, this.REVIEWS_PATH + "/" + reviewId);
+        let review = (await get(reviewsRef)).val();
+
+        // get location from review locationId
+        let location = await this.getLocation(review.locationId);
+        // update location data
+        location.reviewsCount--;
+        location.reviewsScoreSum -= review.score;
+        // set location at review locarionId
+        this.#setLocation(review.locationId, location);
+
+        // remove review
+        remove(reviewsRef);
     }
 }

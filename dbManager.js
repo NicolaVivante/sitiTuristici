@@ -9,14 +9,6 @@ export class DBManager {
     // call given callback each time db changes
     onDBChange(callBack) {}
 
-    //TODO: remove
-    // call given callback each time the locations list changes
-    onLocationsChange(callBack) {}
-
-    //TODO: remove
-    // call given callback each time the reviews list changes
-    onReviewsChange(callBack) {}
-
     // add given location to locations list and return the location id
     addLocation(location) {}
 

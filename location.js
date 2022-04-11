@@ -15,34 +15,20 @@ export class Location {
         return this.reviewsScoreSum / this.reviewsCount;
     }
 
-    // maybe remove
-    getReviewsCount() {
-        return this.reviewsCount;
+    addReviews(reviews) {
+        this["reviews"] = reviews;
     }
 
-    // maybe remove
-    addReview(value) {
-        if (value < 0 || value > 5) {
-            throw new Error('Review score out of range');
-        }
-        this.reviewsScoreSum += value;
-        this.reviewsCount++;
+    getReviews() {
+        return this["reviews"];
     }
 
-    // maybe remove
-    removeReview(value) {
-        if (value < 0 || value > 5) {
-            throw new Error('Review score out of range');
-        }
-        this.reviewsScoreSum -= value;
-        this.reviewsCount--;
-    }
 }
 
 // from google docs https://developers.google.com/maps/documentation/javascript/overview#maps_map_simple-javascript
 function initMap() {
     map = new google.maps.Map(document.getElementById("map"), {
-        center: { lat: -34.397, lng: 150.644 },
+        center: "",
         zoom: 8,
     });
 }
