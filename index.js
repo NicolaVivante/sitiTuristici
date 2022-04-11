@@ -1,5 +1,6 @@
+import { DBManager } from "./DBManager.js";
 import { Location } from "./location.js";
-import { DBManager } from "./dbManager.js";
+import { RealtimeDBManager } from "./realtimeDBManager.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyDm5EynX5GYeJXF7VWZBO3IY0vjjRPl_hA",
@@ -25,11 +26,13 @@ function dumpDB(db) {
     outdump.innerHTML = JSON.stringify(db, null, 2);
 }
 
-let dbManager = new DBManager(firebaseConfig);
+let dbManager = new RealtimeDBManager(firebaseConfig);
 dbManager.onDBChange(dumpDB);
 dbManager.onLocationsChange(renderLocations);
 
 let piazza = new Location("piazza", "{}");
 piazza.addReview(4.5);
 let id = dbManager.addLocation(piazza);
+let location = await dbManager.getLocation(id);
 dbManager.removeLocation(id);
+console.log(location);
