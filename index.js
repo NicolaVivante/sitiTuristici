@@ -52,8 +52,31 @@ let allReviews = await dbManager.getAllReviews();
 // console.log(allLocations);
 let allLocationsCopy = allLocations.slice(0, allLocations.length);
 dbManager.orderLocationsByReviewsCount(allLocationsCopy, true);
-console.log(allLocationsCopy);
+//console.log(allLocationsCopy);
 // let allLocationsCopy1 = allLocations.slice(0, allLocations.length);
 // dbManager.orderLocationsByLetter(allLocationsCopy1, true);
 // console.log(allLocationsCopy1);
-console.log(allReviews);
+//console.log(allReviews);
+
+
+// AUTHENTICATION TEST
+import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.6.9/firebase-auth.js";
+
+const auth = getAuth();
+
+let email = "test.test@test.com";
+let password = "password";
+
+createUserWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
+        // Signed in 
+        const user = userCredential.user;
+        // ...
+        console.log("Logged" + user);
+    })
+    .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log(errorMessage);
+        // ..
+    });
