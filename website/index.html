@@ -9,45 +9,39 @@
 </head>
 
 <body>
-    <button id="userAvatar" style="display: none">USER</button>
     <!-- user button -> user logo -->
+    <!-- login / logout button -->
+    <button id="userAvatar" style="display: none">USER</button>
     <button id="loginButton" style="display: none">LOG IN</button>
     <button id="logoutButton" style="display: none">LOG OUT</button>
-    <!-- login / logout button -->
     <br>
     <!-- barra con i filtri -->
-    <form>
-        Select Filter:<br>
-        <input id="filterButton" type="submit">
-
-
-        <label>
-            <input type="radio" name="filter" value="male" required>
-            Alphabetical
-        </label>
-        <label>
-            <input type="radio" name="filter" value="female">
-            Score
-        </label>
-        <label>
-            <input type="radio" name="filter" value="other">
-            Most reviews
-        </label>
-        <label>
-            <input type="checkbox" name="flipFilter" id="flipFilter">
-            reverse
-        </label><br>
-
-    </form>
     <!-- radio button per il filtro selezionato -->
     <!-- checkbox per invertire il filtro -->
-
+    <form id="filters">
+        Select Filter:<br>
+        <button id="filterButton" type='button'>FILTER</button>
+        <input type="radio" name="filter" value="letter" checked>
+        <label>Alphabetical</label>
+        <input type="radio" name="filter" value="score">
+        <label>Score</label>
+        <input type="radio" name="filter" value="revCount">
+        <label>Most reviews</label>
+        <input type="checkbox" name="reverseFilter" id="reverseFilter">
+        <label>reverse</label>
+    </form>
+    <br>
     <!-- lista delle location -->
     <!-- location -->
     <!-- immagine location -->
     <!-- nome location -->
     <!-- punteggio medio location -->
     <!-- numero recensioni location -->
+    <div>
+
+    </div>
+
+
 
     <!-- mappa delle location -->
 
