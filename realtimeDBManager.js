@@ -1,7 +1,6 @@
 // documentation
 // https://firebase.google.com/docs/database/web/read-and-write
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.9/firebase-app.js";
 import { getDatabase, ref, onValue, get, push, set, remove } from "https://www.gstatic.com/firebasejs/9.6.9/firebase-database.js";
 import { DBManager } from "./DBManager.js";
 import { Review } from "./review.js";
@@ -15,10 +14,8 @@ export class RealtimeDBManager extends DBManager {
     REVIEWS_PATH = 'reviews';
     USERS_PATH = 'users';
 
-    constructor(firebaseConfig) {
-        // initialize Firebase
-        super(firebaseConfig);
-        const app = initializeApp(firebaseConfig);
+    constructor(app) {
+        super(app);
         this.db = getDatabase(app);
     }
 

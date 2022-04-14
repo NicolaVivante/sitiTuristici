@@ -2,7 +2,7 @@ export class User {
     name;
     registrationDate;
 
-    constructor(name, email) {
+    constructor(name) {
         this.name = name;
         this.registrationDate = Date.now();
     }
