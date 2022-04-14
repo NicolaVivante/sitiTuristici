@@ -5,6 +5,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.9/firebase
 import { getDatabase, ref, onValue, get, push, set, remove } from "https://www.gstatic.com/firebasejs/9.6.9/firebase-database.js";
 import { DBManager } from "./DBManager.js";
 import { Review } from "./review.js";
+import { User } from "./user.js";
 import { Location } from "./location.js";
 
 export class RealtimeDBManager extends DBManager {
@@ -95,18 +96,22 @@ export class RealtimeDBManager extends DBManager {
         let reviewsRef = ref(this.db, this.REVIEWS_PATH);
         let allReviewsSnap = await get(reviewsRef);
         let locationReviews = [];
-        allReviewsSnap.forEach(reviewSnap => {
+        await allReviewsSnap.forEach(reviewSnap => {
             let review = reviewSnap.val()
             Object.setPrototypeOf(review, Review.prototype);
             if (review.locationId == locationId) {
                 review.addId(reviewSnap.key);
-                if (withUsers) {
-                    let user = await getUser(userId, false);
-                    review.addUser(user);
-                }
                 locationReviews.push(review);
             }
         });
+
+        if (withUsers) {
+            for (let review of locationReviews) {
+                let user = await this.getUser(review.userId, false);
+                review.addUser(user);
+            }
+        }
+
         return locationReviews;
     }
 
@@ -120,7 +125,7 @@ export class RealtimeDBManager extends DBManager {
             if (review.userId == userId) {
                 review.addId(reviewSnap.key);
                 // add locationName 
-                let location = await this.getLocation(review.locationId, false, false);
+                let location = this.getLocation(review.locationId, false, false);
                 review.addLocationName(location.name);
                 userReviews.push(review);
             }
@@ -160,9 +165,10 @@ export class RealtimeDBManager extends DBManager {
         remove(reviewsRef);
     }
 
-    async addUser(user) {
-        let allUsersRef = ref(this.db, this.USERS_PATH);
-        return push(allUsersRef, user).key;
+    async addUser(user, userId) {
+        let userRef = ref(this.db, this.USERS_PATH + "/" + userId);
+        user.clear();
+        set(userRef, user);
     }
 
     async getAllUsers() {

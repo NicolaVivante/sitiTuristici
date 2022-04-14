@@ -35,7 +35,24 @@ export class Location {
     getId() {
         return this["id"];
     }
+
+    addDescription(description) {
+        this["description"] = description;
+    }
+
+    getDescription() {
+        return this["description"];
+    }
+
+    addContact(contact) {
+        if ("contacts" in this) {
+            this["contacts"].push(contact);
+        } else {
+            this["contacts"] = [contact];
+        }
+    }
+
+    getContacts() {
+        return this["contacts"];
+    }
 }
-
-
-  

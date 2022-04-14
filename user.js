@@ -1,13 +1,9 @@
 export class User {
     name;
-    email;
-    password;
     registrationDate;
 
-    constructor(name, email, password) {
+    constructor(name, email) {
         this.name = name;
-        this.email = email;
-        this.password = password;
         this.registrationDate = Date.now();
     }
 
