@@ -28,53 +28,35 @@ function dumpDB(db) {
     outdump.innerHTML = JSON.stringify(db, null, 2);
 }
 
-let dbManager = new RealtimeDBManager(firebaseConfig);
+const dbManager = new RealtimeDBManager(firebaseConfig);
 dbManager.onDBChange(dumpDB);
 
-let piazza = new Location("piazza", { lat: -34.397, lng: 150.644 });
-//piazza.addReview(4.5);
-// let id = dbManager.addLocation(piazza);
-// let location = await dbManager.getLocation(id);
-// dbManager.removeLocation(id);
-// let allLocations = await dbManager.getAllLocations();
-// console.log(location);
-let id = "-N-MtRivi1SeXGvDdcBU";
-let review = new Review(id, "userId", "Ottimo", 4);
-let reviewId = await dbManager.addReview(review);
-await dbManager.removeReview(reviewId);
+let location = new Location("castello di Brescia", { lat: -34.397, lng: 150.644 });
+location.addContact("un contatto");
+location.addDescription("Il castello, fondato nel 200 a. C., è molto bello");
+// let locationId = dbManager.addLocation(location);
+let locationId = "-N-bSnXf0YkX73JOB9Nn";
 
-let locationWith = await dbManager.getLocation(id, true);
-let locationWithout = await dbManager.getLocation(id, false);
-let allLocations = await dbManager.getAllLocations();
-let allReviews = await dbManager.getAllReviews();
-// console.log(locationWith);
-// console.log(locationWithout);
-// console.log(allLocations);
-let allLocationsCopy = allLocations.slice(0, allLocations.length);
-dbManager.orderLocationsByReviewsCount(allLocationsCopy, true);
-//console.log(allLocationsCopy);
-// let allLocationsCopy1 = allLocations.slice(0, allLocations.length);
-// dbManager.orderLocationsByLetter(allLocationsCopy1, true);
-// console.log(allLocationsCopy1);
-//console.log(allReviews);
+import { AuthenticationManager } from "./authenticationManager.js";
 
+const authManager = new AuthenticationManager(dbManager);
 
-// AUTHENTICATION TEST
-import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.6.9/firebase-auth.js";
-
-const auth = getAuth();
-
-let email = "test.test@test.com";
+let name = "amogosus1";
+let email = "test1.test@test.com";
 let password = "password";
 
-createUserWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
-        // Signed in 
-        const user = userCredential.user;
-        // ...
-        console.log("User created");
-    })
-    .catch((error) => {
-        const errorMessage = error.message;
-        console.log(errorMessage);
-    });
+console.log(authManager.getCurrentUser()); // null before login / registration
+
+await authManager.register(name, email, password);
+await authManager.login(email, password);
+
+let review = new Review(locationId, authManager.getCurrentUser().uid, "Scarso", 3);
+let reviewId = await dbManager.addReview(review);
+
+let locationGet = await dbManager.getLocation(locationId, true, true);
+console.log(locationGet);
+
+await dbManager.removeReview(reviewId);
+// await dbManager.removeLocation(locationId);
+
+console.log(authManager.getCurrentUser());
