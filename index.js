@@ -39,7 +39,7 @@ let locationId = "-N-bSnXf0YkX73JOB9Nn";
 
 import { AuthenticationManager } from "./authenticationManager.js";
 
-const authManager = new AuthenticationManager(dbManager);
+self.authManager = new AuthenticationManager(dbManager);
 
 let name = "amogosus1";
 let email = "test1.test@test.com";
