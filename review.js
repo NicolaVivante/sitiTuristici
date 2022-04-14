@@ -22,6 +22,26 @@ export class Review {
         this["locationName"] = null;
     }
 
+    addMedia(mediaName) {
+        if ("media" in this) {
+            this["media"].push(mediaName);
+        } else {
+            this["media"] = [mediaName];
+        }
+    }
+
+    getMedia() {
+        return this["media"];
+    }
+
+    addDescription(description) {
+        this["description"] = description;
+    }
+
+    getDescription() {
+        return this["description"];
+    }
+
     addUser(user) {
         this["user"] = user;
     }

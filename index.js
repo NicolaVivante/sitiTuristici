@@ -45,18 +45,57 @@ let name = "amogosus1";
 let email = "test1.test@test.com";
 let password = "password";
 
-console.log(authManager.getCurrentUser()); // null before login / registration
+//console.log(authManager.getCurrentUser()); // null before login / registration
 
-await authManager.register(name, email, password);
+//await authManager.register(name, email, password);
 await authManager.login(email, password);
 
 let review = new Review(locationId, authManager.getCurrentUser().uid, "Scarso", 3);
 let reviewId = await dbManager.addReview(review);
 
 let locationGet = await dbManager.getLocation(locationId, true, true);
-console.log(locationGet);
+//console.log(locationGet);
 
 await dbManager.removeReview(reviewId);
 // await dbManager.removeLocation(locationId);
 
-console.log(authManager.getCurrentUser());
+//console.log(authManager.getCurrentUser());
+
+
+// MEDIA UPLOAD TEST
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.9/firebase-app.js";
+import { getStorage, ref, uploadBytes } from "https://www.gstatic.com/firebasejs/9.6.9/firebase-storage.js";
+
+
+const firebaseApp = initializeApp(firebaseConfig);
+const storage = getStorage(firebaseApp);
+
+
+function uploadMedia(path, file) {
+
+    const storageRef = ref(storage, path + "/" + file.name);
+    console.log(storageRef);
+
+    // 'file' comes from the Blob or File API
+    uploadBytes(storageRef, file).then((snapshot) => {
+        console.log('Uploaded a blob or file!');
+        console.log(snapshot.ref.fullPath);
+    }).catch((error) => {
+        const errorCode = error.errorCode;
+        const errorMessage = error.message;
+        console.log(errorMessage + ", " + errorCode);
+    });
+}
+
+
+const fileSelector = document.getElementById('file-selector');
+fileSelector.addEventListener('change', (event) => {
+    const fileList = event.target.files;
+    console.log(fileList);
+    uploadMedia(authManager.getCurrentUser().uid, fileList[0]);
+});
+
+function getMediaUrl(path) {
+
+}
