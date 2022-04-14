@@ -10,7 +10,7 @@ export class Review {
         this.userId = userId;
         this.title = title;
         if (score < 0 || score > 5) {
-            throw("Review score must be in [0-5] range");
+            throw ("Review score must be in [0-5] range");
         }
         this.score = score;
         this.date = Date.now();
@@ -19,6 +19,7 @@ export class Review {
     clean() {
         this["user"] = null;
         this["id"] = null;
+        this["locationName"] = null;
     }
 
     addUser(user) {
@@ -35,5 +36,13 @@ export class Review {
 
     getId() {
         return this["id"];
+    }
+
+    addLocationName(locationName) {
+        this["locationName"] = locationName;
+    }
+
+    getLocationName() {
+        return this["locationName"];
     }
 }

@@ -72,11 +72,9 @@ createUserWithEmailAndPassword(auth, email, password)
         // Signed in 
         const user = userCredential.user;
         // ...
-        console.log("Logged" + user);
+        console.log("User created");
     })
     .catch((error) => {
-        const errorCode = error.code;
         const errorMessage = error.message;
         console.log(errorMessage);
-        // ..
     });
