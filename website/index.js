@@ -1,15 +1,41 @@
-import { init } from "./init.js";
+import { init, getAuthManager } from "./init.js";
 init();
 
-document.getElementById("userButton").onclick = authentication;
+const authManager = getAuthManager();
+const userAvatar = document.getElementById("userAvatar");
+const loginButton = document.getElementById("loginButton");
+const logoutButton = document.getElementById("logoutButton");
 
-export function authentication() {
-    if (self.authManager != null && self.authManager.getCurrentUser() != null) {
-        console.log("to user page");
-        window.location.href = "userProfile.html";
-    } else {
-        console.log("to login / register page");
-        window.location.href = "authentication.html";
-    }
+function hide(element) {
+    element.style.display = "none";
+}
+
+function show(element) {
+    element.style.display = "block";
+}
+
+userAvatar.onclick = login;
+loginButton.onclick = login;
+logoutButton.onclick = logout;
+
+if (authManager.getCurrentUser() != null) {
+    console.log("Logged");
+    hide(loginButton);
+    show(logoutButton)
+    show(userAvatar)
+} else {
+    hide(logoutButton);
+    hide(userAvatar);
+    show(loginButton);
+    console.log("Not logged");
+}
+
+export function login() {
+    window.location.href = "authentication.html";
+}
+
+export function logout() {
+    authManager.logout();
+    window.location.href = "index.html";
 }
 

@@ -13,14 +13,20 @@ const firebaseConfig = {
 };
 
 export function init() {
-
     let init = localStorage.getItem("init");
     if (init != true) {
-        const app = initializeApp(firebaseConfig);
-        let dbManager = new RealtimeDBManager(app);
-        let authManager = new AuthenticationManager(dbManager);
-        localStorage.setItem("dbManager", dbManager);
-        localStorage.setItem("authManager", authManager);
+        localStorage.setItem("config", firebaseConfig);
         localStorage.setItem("init", true);
     }
+}
+
+export function getAuthManager() {
+    const app = initializeApp(firebaseConfig);
+    let dbManager = new RealtimeDBManager(app);
+    return new AuthenticationManager(dbManager);
+}
+
+export function getDBManager() {
+    const app = initializeApp(firebaseConfig);
+    return new RealtimeDBManager(app);
 }

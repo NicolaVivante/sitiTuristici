@@ -1,4 +1,4 @@
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/9.6.9/firebase-auth.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, signOut } from "https://www.gstatic.com/firebasejs/9.6.9/firebase-auth.js";
 import { User } from "./user.js";
 
 export class AuthenticationManager {
@@ -33,6 +33,14 @@ export class AuthenticationManager {
 
     async login(email, password) {
         await signInWithEmailAndPassword(this.auth, email, password)
+            .catch((error) => {
+                const errorMessage = error.message;
+                console.log(errorMessage);
+            });
+    }
+
+    async logout() {
+        await signOut(this.auth)
             .catch((error) => {
                 const errorMessage = error.message;
                 console.log(errorMessage);

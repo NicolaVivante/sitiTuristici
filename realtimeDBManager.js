@@ -45,14 +45,12 @@ export class RealtimeDBManager extends DBManager {
     async getLocation(locationId, withReviews, withUsers) {
         // retrieve location
         let locationRef = ref(this.db, this.LOCATIONS_PATH + "/" + locationId);
-        let locationObj = (await get(locationRef)).val();
-        if (locationObj == null) {
+        let location = (await get(locationRef)).val();
+        if (location == null) {
             throw (`Location with id ${locationId} not found`);
         }
 
-        let location = new Location();
-        Object.assign(location, locationObj);
-
+        Object.setPrototypeOf(location, Location.prototype);
         if (withReviews) {
             let reviews = await this.getReviewsOfLocation(locationId, withUsers);
             location.addReviews(reviews);

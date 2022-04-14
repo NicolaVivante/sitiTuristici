@@ -9,12 +9,36 @@
 </head>
 
 <body>
-    <!-- authentication button -->
-    <button id="userButton">USER</button>
-    <!-- user button -->
-    <!-- (si disabilitano a vicenda) -->
-
+    <button id="userAvatar" style="display: none">USER</button>
+    <!-- user button -> user logo -->
+    <button id="loginButton" style="display: none">LOG IN</button>
+    <button id="logoutButton" style="display: none">LOG OUT</button>
+    <!-- login / logout button -->
+    <br>
     <!-- barra con i filtri -->
+    <form>
+        Select Filter:<br>
+        <input id="filterButton" type="submit">
+
+
+        <label>
+            <input type="radio" name="filter" value="male" required>
+            Alphabetical
+        </label>
+        <label>
+            <input type="radio" name="filter" value="female">
+            Score
+        </label>
+        <label>
+            <input type="radio" name="filter" value="other">
+            Most reviews
+        </label>
+        <label>
+            <input type="checkbox" name="flipFilter" id="flipFilter">
+            reverse
+        </label><br>
+
+    </form>
     <!-- radio button per il filtro selezionato -->
     <!-- checkbox per invertire il filtro -->
 
