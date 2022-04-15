@@ -3,9 +3,9 @@
 
 import { getDatabase, ref, onValue, get, push, set, remove } from "https://www.gstatic.com/firebasejs/9.6.9/firebase-database.js";
 import { DBManager } from "./DBManager.js";
-import { Review } from "./review.js";
-import { User } from "./user.js";
-import { Location } from "./location.js";
+import { Review } from "./Review.js";
+import { User } from "./User.js";
+import { Location } from "./Location.js";
 
 export class RealtimeDBManager extends DBManager {
 
@@ -160,7 +160,7 @@ export class RealtimeDBManager extends DBManager {
         remove(reviewsRef);
     }
 
-    async addUser(user, userId) {
+    async setUser(userId, user) {
         let userRef = ref(this.db, this.USERS_PATH + "/" + userId);
         user.clear();
         set(userRef, user);

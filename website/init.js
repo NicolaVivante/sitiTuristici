@@ -1,6 +1,7 @@
-import { RealtimeDBManager } from "../realtimeDBManager.js";
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.9/firebase-app.js";
-import { AuthenticationManager } from "../authenticationManager.js";
+import { RealtimeDBManager } from "../RealtimeDBManager.js";
+import { AuthenticationManager } from "../AuthenticationManager.js";
+import { StorageManager } from "../StorageManager.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyDm5EynX5GYeJXF7VWZBO3IY0vjjRPl_hA",
@@ -23,10 +24,15 @@ export function init() {
 export function getAuthManager() {
     const app = initializeApp(firebaseConfig);
     let dbManager = new RealtimeDBManager(app);
-    return new AuthenticationManager(dbManager);
+    return new AuthenticationManager(dbManager, app);
 }
 
 export function getDBManager() {
     const app = initializeApp(firebaseConfig);
     return new RealtimeDBManager(app);
+}
+
+export function getStorageManager() {
+    const app = initializeApp(firebaseConfig);
+    return new StorageManager(app);
 }

@@ -28,7 +28,7 @@ export class User {
         return this["description"];
     }
 
-    addPhoto(photoRef) {
+    setPhoto(photoRef) {
         this["photo"] = photoRef;
     }
 

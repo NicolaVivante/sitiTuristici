@@ -1,12 +1,15 @@
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, signOut } from "https://www.gstatic.com/firebasejs/9.6.9/firebase-auth.js";
-import { User } from "./user.js";
+import { User } from "./User.js";
+import { StorageManager } from "../StorageManager.js";
 
 export class AuthenticationManager {
     dbManager;
+    storageManager;
     auth;
 
-    constructor(dbManager) {
+    constructor(dbManager, app) {
         this.dbManager = dbManager;
+        this.storageManager = new StorageManager(app);
         this.auth = getAuth();
     }
 
@@ -19,7 +22,7 @@ export class AuthenticationManager {
             .then((userCredential) => {
                 // add user to db
                 let newUser = new User(name, email);
-                this.dbManager.addUser(newUser, userCredential.user.uid);
+                this.dbManager.setUser(userCredential.user.uid, newUser);
             })
             .then(() => {
                 this.updateName(name);
@@ -48,18 +51,39 @@ export class AuthenticationManager {
     }
 
     async updateName(name) {
+        // update auth profile
         await updateProfile(this.auth.currentUser, { displayName: name })
             .catch((error) => {
                 const errorMessage = error.message;
                 console.log(errorMessage);
             });
+
+        // update db
+        const userId = this.auth.currentUser.uid;
+        let user = this.dbManager.getUser(userId, false);
+        user.name = name;
+        this.dbManager.setUser(userId, user);
     }
 
-    async updatePhoto(photoURL) {
-        await updateProfile(this.auth.currentUser, { photoURL: photoURL })
+    async updatePhoto(photoFile) {
+        const userId = this.auth.currentUser.uid;
+
+        // update storage
+        await this.storageManager.uploadUserImage(userId, photoFile);
+
+        // get photo URL
+        let imageURL = await this.storageManager.getUserImageURL(userId, photoFile.name);
+
+        // update auth profile
+        await updateProfile(this.auth.currentUser, { photoURL: imageURL })
             .catch((error) => {
                 const errorMessage = error.message;
                 console.log(errorMessage);
             });
+
+        // update db
+        let user = this.dbManager.getUser(userId, false);
+        user.setPhoto(imageURL);
+        this.dbManager.setUser(userId, user);
     }
 }
