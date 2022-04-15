@@ -28,12 +28,12 @@ export class User {
         return this["description"];
     }
 
-    setPhoto(photoRef) {
-        this["photo"] = photoRef;
+    setImage(imageURL) {
+        this["image"] = imageURL;
     }
 
-    getPhoto() {
-        return this["photo"];
+    getImage() {
+        return this["image"];
     }
 
     addReviews(reviews) {

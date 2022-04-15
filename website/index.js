@@ -1,56 +1,55 @@
-import { init, getAuthManager, getDBManager } from "./init.js";
-init();
+import * as Utils from "./utils.js";
 
-const authManager = getAuthManager();
-const dbManager = getDBManager();
 const userAvatar = document.getElementById("userAvatar");
 const loginButton = document.getElementById("loginButton");
 const logoutButton = document.getElementById("logoutButton");
 const filterButton = document.getElementById("filterButton");
 const reverseFilter = document.getElementById("reverseFilter");
+const locationsList = document.getElementById("locationsList");
 
-function login() {
+function toLogin() {
     window.location.href = "authentication.html";
 }
 
-function logout() {
-    authManager.logout();
+function toLogout() {
+    Utils.logout();
     window.location.href = "index.html";
 }
 
+function renderLocation(location) {
+    // render location -> create element and insert into the document
+    let nameElement = document.createElement("div");
+    nameElement.innerText = "Name: " + location.name;
+    let scoreElement = document.createElement("div");
+    scoreElement.innerText = "Average score: " + location.getAvgScore();
+    let revCountElement = document.createElement("div");
+    revCountElement.innerText = "Reviews: " + location.reviewsCount;
+    let locationElement = document.createElement("div");
+
+    locationElement.id = location.getId();
+    locationElement.appendChild(nameElement);
+    locationElement.appendChild(scoreElement);
+    locationElement.appendChild(revCountElement);
+    locationElement.appendChild(document.createElement("br"));
+    locationsList.appendChild(locationElement);
+
+    // console.log(`${location.name}, average score: ${location.getAvgScore()}, number of reviews: ${location.reviewsCount}`);
+}
+
 async function updateLocations() {
-    let locations = await getAllLocations();
-    // clear location list
-    for (let location of locations) {
-        console.log(`${location.name}, average score: ${location.getAvgScore()}, number of reviews: ${location.reviewsCount}`);
-        // render location (create element and insert into the document)
-    }
-}
-
-async function getAllLocations() {
-    let locations = await dbManager.getAllLocations();
-    const filter = getFilter();
+    const filter = getLocationFilter();
     const reverse = reverseFilter.checked;
-    console.log("getting all locations with filter " + filter + ", reverse: " + reverse);
-    switch (filter) {
-        case "letter": {
-            dbManager.orderLocationsByName(locations, reverse);
-            break;
-        }
-        case "score": {
-            dbManager.orderLocationsByScore(locations, reverse);
-            break;
-        }
-        case "revCount": {
-            dbManager.orderLocationsByReviewsCount(locations, reverse);
-            break;
-        }
+    // console.log("getting all locations with filter " + filter + ", reverse: " + reverse);
+    let locations = await Utils.getAllLocations(filter, reverse);
+    // clear location list
+    locationsList.innerHTML = '';
+    for (let location of locations) {
+        renderLocation(location);
     }
-    return locations;
 }
 
-function getFilter() {
-    let filters = document.getElementsByName("filter");
+function getLocationFilter() {
+    let filters = document.getElementsByName("locationFilter");
     for (let filter of filters) {
         if (filter.checked) {
             return filter.value;
@@ -58,29 +57,20 @@ function getFilter() {
     }
 }
 
-function hide(element) {
-    element.style.display = "none";
-}
-
-function show(element) {
-    element.style.display = "block";
-}
-
-userAvatar.onclick = login;
-loginButton.onclick = login;
-logoutButton.onclick = logout;
+userAvatar.onclick = toLogin;
+loginButton.onclick = toLogin;
+logoutButton.onclick = toLogout;
 filterButton.onclick = updateLocations;
 
 updateLocations();
-if (authManager.getCurrentUser() != null) {
+const logged = Utils.isLogged();
+Utils.enableDisplay(loginButton, !logged);
+Utils.enableDisplay(logoutButton, logged);
+Utils.enableDisplay(userAvatar, logged);
+
+if (Utils.isLogged()) {
     console.log("Logged");
-    hide(loginButton);
-    show(logoutButton)
-    show(userAvatar)
 } else {
-    hide(logoutButton);
-    hide(userAvatar);
-    show(loginButton);
     console.log("Not logged");
 }
 

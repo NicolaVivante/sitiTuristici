@@ -19,13 +19,13 @@
     <!-- radio button per il filtro selezionato -->
     <!-- checkbox per invertire il filtro -->
     <form id="filters">
-        Select Filter:<br>
+        Search Filters:<br>
         <button id="filterButton" type='button'>FILTER</button>
-        <input type="radio" name="filter" value="letter" checked>
+        <input type="radio" name="locationFilter" value="letter" checked>
         <label>Alphabetical</label>
-        <input type="radio" name="filter" value="score">
+        <input type="radio" name="locationFilter" value="score">
         <label>Score</label>
-        <input type="radio" name="filter" value="revCount">
+        <input type="radio" name="locationFilter" value="revCount">
         <label>Most reviews</label>
         <input type="checkbox" name="reverseFilter" id="reverseFilter">
         <label>reverse</label>
@@ -37,7 +37,7 @@
     <!-- nome location -->
     <!-- punteggio medio location -->
     <!-- numero recensioni location -->
-    <div>
+    <div id="locationsList">
 
     </div>
 

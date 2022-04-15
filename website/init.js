@@ -24,7 +24,7 @@ export function init() {
 export function getAuthManager() {
     const app = initializeApp(firebaseConfig);
     let dbManager = new RealtimeDBManager(app);
-    return new AuthenticationManager(dbManager, app);
+    return new AuthenticationManager(dbManager);
 }
 
 export function getDBManager() {

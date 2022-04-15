@@ -13,7 +13,7 @@ export class StorageManager {
 
     async removeAllChilds(ref) {
         const oldMedia = (await listAll(ref)).items;
-        for (let oldFile of oldFile) {
+        for (let oldFile of oldMedia) {
             deleteObject(oldFile);
         }
     }
