@@ -9,7 +9,6 @@ const userMail = document.getElementById("userMail");
 const userImage = document.getElementById("userImage");
 const imageInput = document.getElementById("imageInput");
 
-
 changeNameButton.onclick = function () {
     console.log("username clicked");
     Utils.enableDisplay(usernameInput, true);
@@ -32,11 +31,6 @@ changeImageButton.onclick = function () {
 }
 
 imageInput.onchange = async function () {
-    const reader = new FileReader();
-    reader.onload = function () {
-        //target.src = reader.result;
-        //console.log(reader.result);
-    }
     const imgFile = this.files[0];
     //reader.readAsDataURL(imgFile);
     //console.log(imgFile);
