@@ -27,7 +27,7 @@ export async function register(name, email, password) {
     let error = await authManager.register(name, email, password);
     if (error == null) {
         let newUser = new User(name, email);
-        await dbManager.setUser(currentUser().uid, newUser);
+        await dbManager.setUser(authManager.getCurrentUser().uid, newUser);
     };
     return error;
 }

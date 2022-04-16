@@ -7,15 +7,6 @@ const filterButton = document.getElementById("filterButton");
 const reverseFilter = document.getElementById("reverseFilter");
 const locationsList = document.getElementById("locationsList");
 
-function toLogin() {
-    window.location.href = "authentication.html";
-}
-
-function toLogout() {
-    Utils.logout();
-    window.location.replace("./index.html");
-}
-
 function renderLocation(location) {
     // render location -> create element and insert into the document
     let nameElement = document.createElement("div");
@@ -57,9 +48,19 @@ function getLocationFilter() {
     }
 }
 
-// userAvatar.onclick = toUserPage;
-loginButton.onclick = toLogin;
-logoutButton.onclick = toLogout;
+userAvatar.onclick = function () {
+    window.location.replace("./userProfile.html");
+};
+
+loginButton.onclick = function () {
+    window.location.replace("./authentication.html");
+};
+
+logoutButton.onclick = function () {
+    Utils.logout();
+    window.location.replace("./index.html");
+};
+
 filterButton.onclick = updateLocations;
 
 updateLocations();
@@ -70,13 +71,18 @@ Utils.onLogStateChange(
         console.log(`Name: ${user.displayName}, email: ${user.email}`);
         Utils.enableDisplay(loginButton, false);
         Utils.enableDisplay(logoutButton, true);
-        Utils.enableDisplay(userAvatar, true);
+        if (user.photoURL != null) {
+            userAvatar.src = user.photoURL;
+        } else {
+            userAvatar.src = "../default-user-icon.jpg";
+        }
     },
     // when not logged
     () => {
         Utils.enableDisplay(loginButton, true);
         Utils.enableDisplay(logoutButton, false);
         Utils.enableDisplay(userAvatar, false);
+        userAvatar.src = "../default-user-icon.jpg";
     });
 
 
