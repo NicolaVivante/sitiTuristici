@@ -32,7 +32,7 @@ export async function register(name, email, password) {
     return error;
 }
 
-export async function updateUserPhoto(imageFile) {
+export async function updateUserImage(imageFile) {
     const userId = authManager.getCurrentUser().uid;
 
     await storageManager.uploadUserImage(userId, imageFile);

@@ -1,31 +1,52 @@
 import * as Utils from "./utils.js";
 
 const toHomeButton = document.getElementById("toHomePageButton");
-const userName = document.getElementById("userName");
+const changeNameButton = document.getElementById("changeNameButton");
+const changeImageButton = document.getElementById("changeImgButton");
+const usernameLabel = document.getElementById("username");
+const usernameInput = document.getElementById("usernameInput");
 const userMail = document.getElementById("userMail");
 const userImage = document.getElementById("userImage");
+const imageInput = document.getElementById("imageInput");
 
+
+changeNameButton.onclick = function () {
+    console.log("username clicked");
+    Utils.enableDisplay(usernameInput, true);
+    Utils.enableDisplay(usernameLabel, false);
+}
+
+usernameInput.onchange = async function () {
+    await Utils.updateUsername(usernameInput.value);
+    Utils.enableDisplay(usernameInput, false);
+    Utils.enableDisplay(usernameLabel, true);
+    window.location.reload();
+}
 
 toHomeButton.onclick = function () {
     window.location.replace("./index.html");
 }
 
-userImage.onclick = function () {
-    //TODO: fix
-    let target = document.getElementById("target");
-    let src = document.getElementById("src");
-    let fr = new FileReader();
-    fr.onload = function () {
-        target.src = fr.result;
-        console.log(fr.result);
+changeImageButton.onclick = function () {
+    imageInput.click();
+}
+
+imageInput.onchange = async function () {
+    const reader = new FileReader();
+    reader.onload = function () {
+        //target.src = reader.result;
+        //console.log(reader.result);
     }
-    console.log(fr.readAsDataURL(src.files[0]));
+    const imgFile = this.files[0];
+    //reader.readAsDataURL(imgFile);
+    //console.log(imgFile);
+    await Utils.updateUserImage(imgFile);
+    window.location.reload();
 }
 
 Utils.onLogStateChange(
     (user) => {
-        console.log("logged");
-        userName.innerText = user.displayName;
+        usernameLabel.innerText = user.displayName;
         userMail.innerText = user.email;
         if (user.photoURL == null) {
             userImage.src = "../default-user-icon.jpg";
@@ -34,6 +55,7 @@ Utils.onLogStateChange(
         }
     },
     () => {
-
+        console.log("Not logged ");
+        //TODO: redirect to home page
     }
 );
