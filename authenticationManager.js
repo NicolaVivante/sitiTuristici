@@ -1,5 +1,4 @@
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, signOut } from "https://www.gstatic.com/firebasejs/9.6.9/firebase-auth.js";
-import { User } from "./User.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.9/firebase-auth.js";
 
 export class AuthenticationManager {
     auth;
@@ -11,6 +10,16 @@ export class AuthenticationManager {
 
     getCurrentUser() {
         return this.auth.currentUser;
+    }
+
+    async onLogStateChange(callback1, callback2) {
+        onAuthStateChanged(this.auth, (user) => {
+            if (user) {
+                callback1(user);
+            } else {
+                callback2();
+            }
+        });
     }
 
     async register(name, email, password) {
@@ -26,10 +35,14 @@ export class AuthenticationManager {
     }
 
     async login(email, password) {
-        await signInWithEmailAndPassword(this.auth, email, password)
+        return await signInWithEmailAndPassword(this.auth, email, password)
+            .then(() => {
+                return null;
+            })
             .catch((error) => {
                 const errorMessage = error.message;
                 console.log(errorMessage);
+                return error.code;
             });
     }
 

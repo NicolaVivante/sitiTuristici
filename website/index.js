@@ -13,7 +13,7 @@ function toLogin() {
 
 function toLogout() {
     Utils.logout();
-    window.location.href = "index.html";
+    window.location.replace("./index.html");
 }
 
 function renderLocation(location) {
@@ -57,21 +57,26 @@ function getLocationFilter() {
     }
 }
 
-userAvatar.onclick = toLogin;
+// userAvatar.onclick = toUserPage;
 loginButton.onclick = toLogin;
 logoutButton.onclick = toLogout;
 filterButton.onclick = updateLocations;
 
 updateLocations();
-const logged = Utils.isLogged();
-Utils.enableDisplay(loginButton, !logged);
-Utils.enableDisplay(logoutButton, logged);
-Utils.enableDisplay(userAvatar, logged);
 
-if (Utils.isLogged()) {
-    console.log("Logged");
-} else {
-    console.log("Not logged");
-}
+Utils.onLogStateChange(
+    // when logged
+    (user) => {
+        console.log(`Name: ${user.displayName}, email: ${user.email}`);
+        Utils.enableDisplay(loginButton, false);
+        Utils.enableDisplay(logoutButton, true);
+        Utils.enableDisplay(userAvatar, true);
+    },
+    // when not logged
+    () => {
+        Utils.enableDisplay(loginButton, true);
+        Utils.enableDisplay(logoutButton, false);
+        Utils.enableDisplay(userAvatar, false);
+    });
 
 

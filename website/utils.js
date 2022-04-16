@@ -10,12 +10,12 @@ export function currentUser() {
     return authManager.getCurrentUser();
 }
 
-export function isLogged() {
-    return currentUser() != null;
+export function onLogStateChange(loggedCallback, notLoggedCallback) {
+    authManager.onLogStateChange(loggedCallback, notLoggedCallback);
 }
 
 export async function login(email, password) {
-    await authManager.login(email, password);
+    return await authManager.login(email, password);
 }
 
 export async function logout() {
@@ -74,5 +74,5 @@ export async function getAllLocations(filter, reverse) {
 }
 
 export function enableDisplay(element, enable) {
-    element.style.display = enable ? "block" : "none";
+    element.style.display = enable ? "inline-block" : "none";
 }
