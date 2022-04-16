@@ -23,14 +23,15 @@ export class AuthenticationManager {
     }
 
     async register(name, email, password) {
-        await createUserWithEmailAndPassword(this.auth, email, password)
+        return await createUserWithEmailAndPassword(this.auth, email, password)
             .then(() => {
                 this.updateName(name);
-                console.log("User created");
+                return null;
             })
             .catch((error) => {
                 const errorMessage = error.message;
                 console.log(errorMessage);
+                return error.code;
             });
     }
 

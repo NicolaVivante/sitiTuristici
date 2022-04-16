@@ -20,6 +20,22 @@ loginForm.onsubmit = async function (event) {
     }
 }
 
+registerForm.onsubmit = async function (event) {
+    event.preventDefault();
+
+    const name = document.getElementById("registerName").value;
+    const email = document.getElementById("registerMail").value;
+    const password = document.getElementById("registerPassword").value;
+    const error = await Utils.register(name, email, password);
+    if (error == null) {
+        console.log("User created");
+        window.location.replace("./index.html");
+    } else {
+        console.log("Error: " + error);
+        // TODO: manage error
+    }
+}
+
 function updateLogOptions() {
     // get log option
 

@@ -1,4 +1,5 @@
 import { init, getDBManager, getAuthManager, getStorageManager } from "./init.js";
+import { User } from "../User.js";
 
 init();
 const dbManager = getDBManager();
@@ -23,9 +24,12 @@ export async function logout() {
 }
 
 export async function register(name, email, password) {
-    await authManager.register(name, email, password);
-    let newUser = new User(name, email);
-    await dbManager.setUser(userCredential.user.uid, newUser);
+    let error = await authManager.register(name, email, password);
+    if (error == null) {
+        let newUser = new User(name, email);
+        await dbManager.setUser(currentUser().uid, newUser);
+    };
+    return error;
 }
 
 export async function updateUserPhoto(imageFile) {
