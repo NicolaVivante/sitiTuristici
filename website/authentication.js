@@ -1,45 +1,23 @@
+import { init, getDBManager, getAuthManager } from "./init.js";
 import * as Utils from "./utils.js";
+import { User } from "../User.js";
 
-const toHomeButton = document.getElementById("toHomePageButton");
+init();
+
+const dbManager = getDBManager();
+const authManager = getAuthManager();
+
+const homeButton = document.getElementById("toHomeButton");
 const logOptions = document.getElementById("logOptions");
+
 const loginForm = document.getElementById("loginForm");
+const loginMail = document.getElementById("loginMail");
+const loginPassword = document.getElementById("loginPassword");
+
 const registerForm = document.getElementById("registerForm");
-
-logOptions.onchange = updateLogOptions;
-
-loginForm.onsubmit = async function (event) {
-    event.preventDefault(); // prevent page reload
-
-    const email = document.getElementById("loginMail").value;
-    const password = document.getElementById("loginPassword").value;
-    const error = await Utils.login(email, password);
-    if (error == null) {
-        window.location.replace("./index.html");
-    } else {
-        console.log("Error: " + error);
-        // TODO: manage error
-    }
-}
-
-toHomeButton.onclick = function () {
-    window.location.replace("./index.html");
-}
-
-registerForm.onsubmit = async function (event) {
-    event.preventDefault(); // prevent page reload
-
-    const name = document.getElementById("registerName").value;
-    const email = document.getElementById("registerMail").value;
-    const password = document.getElementById("registerPassword").value;
-    const error = await Utils.register(name, email, password);
-    if (error == null) {
-        console.log("User created");
-        window.location.replace("./index.html");
-    } else {
-        console.log("Error: " + error);
-        // TODO: manage error
-    }
-}
+const registerName = document.getElementById("registerName");
+const registerMail = document.getElementById("registerMail");
+const registerPassword = document.getElementById("registerPassword");
 
 function updateLogOptions() {
     const logOptions = document.getElementsByName("logOption");
@@ -61,5 +39,54 @@ function updateLogOptions() {
     }
 }
 
+async function login(event) {
+    event.preventDefault(); // prevent page reload
 
+    // get user data
+    const email = loginMail.value;
+    const password = loginPassword.value;
+
+    // try login
+    const error = await authManager.login(email, password);
+    if (error == null) {
+        Utils.toHomePage();
+    } else {
+        console.log("Error: " + error);
+        // TODO: manage error
+    }
+}
+
+async function register(event) {
+    event.preventDefault(); // prevent page reload
+
+    // get user data
+    const name = registerName.value;
+    const email = registerMail.value;
+    const password = registerPassword.value;
+
+    // try to register the user
+    const error = await authManager.register(name, email, password);
+
+    if (error == null) {
+        // create user in DB
+        let newUser = new User(name, email);
+        await dbManager.setUser(authManager.getCurrentUser().uid, newUser);
+
+        console.log("User created");
+
+        // redirect to home page
+        Utils.toHomePage();
+    } else {
+        console.log("Error: " + error);
+        // TODO: manage error
+    }
+}
+
+// assign callbacks
+homeButton.onclick = Utils.toHomePage;
+logOptions.onchange = updateLogOptions;
+loginForm.onsubmit = login;
+registerForm.onsubmit = register;
+
+// display login form as active on page load
 updateLogOptions();
