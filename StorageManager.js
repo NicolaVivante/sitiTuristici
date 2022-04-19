@@ -60,4 +60,8 @@ export class StorageManager {
         return await getDownloadURL(storageRef);
     }
 
+    async deleteReviewMedia(reviewId) {
+        const storageRef = ref(this.storage, this.REVIEWS_MEDIA_PATH + "/" + reviewId);
+        await this.removeAllChilds(storageRef);
+    }
 }

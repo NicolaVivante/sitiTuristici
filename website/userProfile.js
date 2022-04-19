@@ -97,12 +97,13 @@ function renderReview(review) {
     return reviewEl;
 }
 
-function deleteReview(event) {
+async function deleteReview(event) {
     event.stopPropagation();
     let reviewId = event.target.dataset.reviewId;
-    let review = dbManager.getReview(reviewId, false, false);
+    await storageManager.deleteReviewMedia(reviewId);
+    await dbManager.removeReview(reviewId);
 
-    console.log("deleted");
+    window.location.reload();
 }
 
 function updateReviews() {
