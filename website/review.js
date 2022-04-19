@@ -8,9 +8,14 @@ const homeButton = document.getElementById("toHomeButton");
 const titleEl = document.getElementById("title");
 const scoreEl = document.getElementById("score");
 const dateEl = document.getElementById("date");
+
 const userEl = document.getElementById("user");
 const usernameEl = document.getElementById("username");
 const userImage = document.getElementById("userImg");
+
+const locationEl = document.getElementById("location");
+const locationNameEl = document.getElementById("locationName");
+
 const descriptionEl = document.getElementById("description");
 
 function displayReview(review) {
@@ -18,7 +23,13 @@ function displayReview(review) {
     titleEl.innerText = "Title: " + review.title;
     scoreEl.innerText = "Score: " + review.score;
     dateEl.innerText = "Date of review: " + Utils.timestampToDate(review.timestamp);
-    userEl.id = review.userId;
+
+    locationEl.dataset.locationId = review.locationId;
+    locationEl.onclick = Utils.toLocation;
+    locationNameEl.innerText = "Location name: " + review.getLocation().name;
+
+    userEl.dataset.userId = review.userId;
+    userEl.onclick = Utils.toUserProfile;
     usernameEl.innerText = "User name: " + review.getUser().name;
     userImage.src = Utils.getUserImage(review.getUser());
 

@@ -29,7 +29,6 @@ authManager.onLogStateChange(
 );
 
 function displayUser(user) {
-    console.log(user);
     // display user data
     usernameLabel.innerText = user.name;
     userImage.src = Utils.getUserImage(user);
@@ -79,6 +78,25 @@ function getReviewsFilter() {
             return filter.value;
         }
     }
+}
+
+function renderReview(review) {
+    let titleEl = document.createElement("div");
+    titleEl.innerText = "Title: " + review.title;
+    let scoreEl = document.createElement("div");
+    scoreEl.innerText = "Score: " + review.score;
+    let locationEl = document.createElement("div");
+    locationEl.innerText = "Location: " + review.getLocation().name;
+    let reviewEl = document.createElement("div");
+
+    reviewEl.dataset.reviewId = review.getId();
+    reviewEl.onclick = Utils.toReview;
+    reviewEl.appendChild(titleEl);
+    reviewEl.appendChild(scoreEl);
+    reviewEl.appendChild(locationEl);
+    reviewEl.appendChild(document.createElement("br"));
+
+    return reviewEl;
 }
 
 function updateReviews() {
@@ -154,5 +172,5 @@ if (userId == null) {
 }
 
 // get user
-const user = await dbManager.getUser(userId, true);
+const user = await dbManager.getUser(userId, true, true);
 displayUser(user);

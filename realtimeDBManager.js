@@ -89,43 +89,56 @@ export class RealtimeDBManager extends DBManager {
 
     async getReviewsOfLocation(locationId, withUsers) {
         let reviewsRef = ref(this.db, this.REVIEWS_PATH);
-        let allReviewsSnap = await get(reviewsRef);
+        let allReviews = (await get(reviewsRef)).val();
         let locationReviews = [];
-        await allReviewsSnap.forEach(reviewSnap => {
-            let review = reviewSnap.val()
+        for (let reviewId in allReviews) {
+            let review = allReviews[reviewId];
             Object.setPrototypeOf(review, Review.prototype);
             if (review.locationId == locationId) {
-                review.addId(reviewSnap.key);
+                review.addId(reviewId);
+                if (withUsers) {
+                    let user = await this.getUser(review.userId, false);
+                    review.addUser(user);
+                }
+
                 locationReviews.push(review);
             }
-        });
-
-        if (withUsers) {
-            for (let review of locationReviews) {
-                let user = await this.getUser(review.userId, false);
-                review.addUser(user);
-            }
         }
-
         return locationReviews;
     }
 
-    async getReviewsOfUser(userId) {
+    async getReviewsOfUser(userId, withLocations) {
         let reviewsRef = ref(this.db, this.REVIEWS_PATH);
-        let allReviewsSnap = await get(reviewsRef);
+        let allReviews = (await get(reviewsRef)).val();
         let userReviews = [];
-        allReviewsSnap.forEach(reviewSnap => {
-            let review = reviewSnap.val()
+        for (let reviewId in allReviews) {
+            let review = allReviews[reviewId];
             Object.setPrototypeOf(review, Review.prototype);
             if (review.userId == userId) {
-                review.addId(reviewSnap.key);
+                review.addId(reviewId);
                 // add location
-                let location = this.getLocation(review.locationId, false, false);
-                review.addLocation(location);
+                if (withLocations) {
+                    let location = await this.getLocation(review.locationId, false, false);
+                    review.addLocation(location);
+                }
                 userReviews.push(review);
             }
-        });
+        };
+
         return userReviews;
+        // allReviewsSnap.forEach((reviewSnap) => {
+        //     let review = reviewSnap.val()
+        //     Object.setPrototypeOf(review, Review.prototype);
+        //     if (review.userId == userId) {
+        //         review.addId(reviewSnap.key);
+        //         // add location
+        //         if (withLocations) {
+        //             let location = this.getLocation(review.locationId, false, false);
+        //             review.addLocation(location);
+        //         }
+        //         userReviews.push(review);
+        //     }
+        // });
     }
 
     async addReview(review) {
@@ -180,18 +193,18 @@ export class RealtimeDBManager extends DBManager {
         return users;
     }
 
-    async getUser(userId, withReviews) {
+    async getUser(userId, withReviews, withLocations) {
         let userRef = ref(this.db, this.USERS_PATH + "/" + userId);
         let user = (await get(userRef)).val();
         Object.setPrototypeOf(user, User.prototype);
         if (withReviews) {
-            let userReviews = await this.getReviewsOfUser(userId);
+            let userReviews = await this.getReviewsOfUser(userId, withLocations);
             user.addReviews(userReviews);
         }
         return user;
     }
 
-    async getReview(reviewId, withuser, withLocation) {
+    async getReview(reviewId, withuser, withLocations) {
         let reviewRef = ref(this.db, this.REVIEWS_PATH + "/" + reviewId);
         let review = (await get(reviewRef)).val();
         Object.setPrototypeOf(review, Review.prototype);
@@ -200,7 +213,7 @@ export class RealtimeDBManager extends DBManager {
             review.addUser(user);
         }
 
-        if (withLocation) {
+        if (withLocations) {
             let location = await this.getLocation(review.locationId, false, false);
             review.addLocation(location);
         }

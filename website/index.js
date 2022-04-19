@@ -22,8 +22,8 @@ function renderLocation(location) {
     revCountEl.innerText = "Reviews: " + location.reviewsCount;
     let locationEl = document.createElement("div");
 
-    locationEl.id = location.getId();
-    locationEl.onclick = toLocation;
+    locationEl.dataset.locationId = location.getId();
+    locationEl.onclick = Utils.toLocation;
     locationEl.appendChild(nameEl);
     locationEl.appendChild(scoreEl);
     locationEl.appendChild(revCountEl);
@@ -32,23 +32,6 @@ function renderLocation(location) {
     return locationEl;
 
     // console.log(`${location.name}, average score: ${location.getAvgScore()}, number of reviews: ${location.reviewsCount}`);
-}
-
-function toLocation(event) {
-    // get the element that actually fired the event (location)
-    let target = event.target;
-    while (target.id == "") {
-        target = target.parentNode;
-    }
-
-    // get location id and save it
-    const locationId = target.id;
-    localStorage.setItem("locationId", locationId);
-
-    console.log(locationId);
-
-    // redirect to location page
-    Utils.redirect("./location.html");
 }
 
 async function updateLocations() {

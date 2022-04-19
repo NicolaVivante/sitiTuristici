@@ -22,31 +22,14 @@ function renderReview(review) {
     userEl.innerText = "User: " + review.getUser().name;
     let reviewEl = document.createElement("div");
 
-    reviewEl.id = review.getId();
-    reviewEl.onclick = toReview;
+    reviewEl.dataset.reviewId = review.getId();
+    reviewEl.onclick = Utils.toReview;
     reviewEl.appendChild(titleEl);
     reviewEl.appendChild(scoreEl);
     reviewEl.appendChild(userEl);
     reviewEl.appendChild(document.createElement("br"));
 
     return reviewEl;
-}
-
-function toReview(event) {
-    // get the element that actually fired the event (location)
-    let target = event.target;
-    while (target.id == "") {
-        target = target.parentNode;
-    }
-
-    // get location id and save it
-    const reviewId = target.id;
-    localStorage.setItem("reviewId", reviewId);
-
-    console.log(reviewId);
-
-    // redirect to location page
-    Utils.redirect("./review.html");
 }
 
 function displayLocation(location) {
