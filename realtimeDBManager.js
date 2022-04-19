@@ -176,7 +176,7 @@ export class RealtimeDBManager extends DBManager {
     async setUser(userId, user) {
         let userRef = ref(this.db, this.USERS_PATH + "/" + userId);
         user.clear();
-        set(userRef, user);
+        await set(userRef, user);
     }
 
     async getAllUsers() {

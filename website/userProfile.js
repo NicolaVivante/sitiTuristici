@@ -30,7 +30,7 @@ authManager.onLogStateChange(
 
 function displayUser(user) {
     // display user data
-    usernameLabel.innerText = user.name;
+    usernameLabel.innerText = "User name: " + user.name;
     userImage.src = Utils.getUserImage(user);
     updateReviews();
 }
@@ -159,7 +159,8 @@ authManager.onLogStateChange(
 
     },
     () => {
-
+        Utils.enableDisplay(changeImageButton, false);
+        Utils.enableDisplay(changeNameButton, false);
     }
 );
 

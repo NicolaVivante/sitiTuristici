@@ -99,18 +99,15 @@ reverseFilter.onchange = updateLocations;
 updateLocations();
 
 authManager.onLogStateChange(
-    // when logged
-    (user) => {
+    async function (authUser) {
+        let user = await dbManager.getUser(authUser.uid, false, false);
         //console.log(`Name: ${user.displayName}, email: ${user.email}`);
         //console.log(user);
         Utils.enableDisplay(loginButton, false);
         Utils.enableDisplay(logoutButton, true);
-        userAvatar.dataset.userId = user.uid;
-        if (user.photoURL != null) {
-            userAvatar.src = user.photoURL;
-        } else {
-            userAvatar.src = "../default-user-icon.jpg";
-        }
+        userAvatar.dataset.userId = authUser.uid;
+        userAvatar.src = Utils.getUserImage(user);
+        userAvatar.title = user.name;
     },
     // when not logged
     () => {

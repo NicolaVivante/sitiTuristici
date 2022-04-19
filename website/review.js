@@ -20,8 +20,8 @@ const descriptionEl = document.getElementById("description");
 
 function displayReview(review) {
     // render base properties
-    titleEl.innerText = "Title: " + review.title;
-    scoreEl.innerText = "Score: " + review.score;
+    titleEl.innerText = "Review title: " + review.title;
+    scoreEl.innerText = "Review score: " + review.score;
     dateEl.innerText = "Date of review: " + Utils.timestampToDate(review.timestamp);
 
     locationEl.dataset.locationId = review.locationId;
