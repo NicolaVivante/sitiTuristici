@@ -39,4 +39,25 @@ export class StorageManager {
         return await getDownloadURL(storageRef);
     }
 
+    async uploadReviewMedia(reviewId, file) {
+        const storageRef = ref(this.storage, this.REVIEWS_MEDIA_PATH);
+        const reviewRef = ref(storageRef, "/" + reviewId);
+
+        await this.removeAllChilds(reviewRef);
+        const fileRef = ref(reviewRef, "/" + file.name);
+
+        await uploadBytes(fileRef, file).then((snapshot) => {
+            console.log('Review file uploaded');
+        }).catch((error) => {
+            const errorCode = error.errorCode;
+            const errorMessage = error.message;
+            console.log(errorMessage + ", " + errorCode);
+        });
+    }
+
+    async getReviewMediaURL(reviewId, fileName) {
+        const storageRef = ref(this.storage, this.REVIEWS_MEDIA_PATH + "/" + reviewId + "/" + fileName);
+        return await getDownloadURL(storageRef);
+    }
+
 }

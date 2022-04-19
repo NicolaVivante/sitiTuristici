@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add review</title>
+    <script src="addReview.js" type="module"></script>
+</head>
+
+<body>
+    <button id="toHomeButton">TO HOME PAGE</button>
+    <div id="locationName"></div>
+    <br>
+    <form id="reviewForm">
+        <label for="reviewTitle">Title: </label>
+        <input type="text" name="input" id="reviewTitle" required>
+        <br>
+        <label for="reviewScore">Score: </label>
+        <input type="number" min="1" max="5" name="input" id="reviewScore" required>
+        <br>
+        <label for="reviewDescription">Description: </label>
+        <input type="text" name="optionalInput" id="reviewDescription">
+        <br>
+        <label for="reviewMedia">Media: </label>
+        <input type="file" name="optionalInput" id="reviewMedia" accept="image/*" multiple>
+        <br>
+        <button id="submitReview">PUBLISH REVIEW</button>
+    </form>
+
+</body>
+
+</html>

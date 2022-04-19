@@ -146,7 +146,7 @@ export class RealtimeDBManager extends DBManager {
         let location = await this.getLocation(review.locationId, false);
         // update location data
         location.reviewsCount++;
-        location.reviewsScoreSum += review.score;
+        location.reviewsScoreSum += parseInt(review.score);
         // set location at review locarionId
         this.#setLocation(review.locationId, location);
 
@@ -154,6 +154,13 @@ export class RealtimeDBManager extends DBManager {
         let reviewsRef = ref(this.db, this.REVIEWS_PATH);
         review.clean();
         return push(reviewsRef, review).key;
+    }
+
+    // USE ONLY TO ADD MEDIA TO REVIEW
+    async setReview(reviewId, review) {
+        let reviewsRef = ref(this.db, this.REVIEWS_PATH + "/" + reviewId);
+        review.clean();
+        await set(reviewsRef, review);
     }
 
     async removeReview(reviewId) {
@@ -165,7 +172,7 @@ export class RealtimeDBManager extends DBManager {
         let location = await this.getLocation(review.locationId);
         // update location data
         location.reviewsCount--;
-        location.reviewsScoreSum -= review.score;
+        location.reviewsScoreSum -= parseInt(review.score);
         // set location at review locarionId
         this.#setLocation(review.locationId, location);
 
@@ -220,4 +227,29 @@ export class RealtimeDBManager extends DBManager {
 
         return review;
     }
+
+    // async getLocationWithCountThree() {
+    //     const locationsSnap = ref(this.db, "locations");
+    //     let returnArray = [];
+
+    //     let allLocations = locationsSnap.val();
+    //     for (let locationId in allLocations) {
+    //         let location = allLocations[locationId];
+    //         let reviews = await this.getReviewsOfLocation(locationId, false);
+    //     }
+
+    //     // locationsRef.forEach(
+    //     // (locationSnap) => {
+    //     //     let location = locationSnap.val();
+    //     //     let locationId = locationSnap.key;
+    //     //     let revCount = location.reviewCount;
+    //     //     if (parseInt(revCount) == 3) {
+    //     //         returnArray.push(location);
+    //     //     }
+    //     // }
+    //     // );
+
+    //     return returnArray;
+    // }
+
 }

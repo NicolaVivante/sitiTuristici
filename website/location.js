@@ -1,8 +1,9 @@
 import * as Utils from "./utils.js";
-import { init, getDBManager } from "./init.js";
+import { init, getDBManager, getAuthManager } from "./init.js";
 
 init();
 const dbManager = getDBManager();
+const authManager = getAuthManager();
 
 const homeButton = document.getElementById("toHomeButton");
 const nameEl = document.getElementById("name");
@@ -12,6 +13,7 @@ const descriptionEl = document.getElementById("description");
 const reviewsList = document.getElementById("reviewsList");
 const reverseFilter = document.getElementById("reverseFilter");
 const reviewFilters = document.getElementsByName("reviewFilter");
+const addReviewButton = document.getElementById("addReview");
 
 function renderReview(review) {
     let titleEl = document.createElement("div");
@@ -85,6 +87,15 @@ function updateReviews() {
     }
 }
 
+// get id of location to display
+const locationId = localStorage.getItem("locationId");
+
+// if location to display is not defined, back to home page
+if (!locationId || locationId == "undefined") {
+    console.log("to home page");
+    Utils.toHomePage();
+}
+
 // assign callbacks
 homeButton.onclick = Utils.toHomePage;
 
@@ -93,18 +104,21 @@ reviewFilters.forEach((filter) => {
 })
 reverseFilter.onchange = updateReviews;
 
-
-// get id of location to display
-const locationId = localStorage.getItem("locationId");
-
-// if location to display is not defined, back to home page
-if (locationId == null) {
-    Utils.toHomePage();
-}
+authManager.onLogStateChange(
+    (user) => {
+        Utils.enableDisplay(addReviewButton, true);
+        addReviewButton.onclick = function () {
+            localStorage.setItem("locationId", locationId);
+            Utils.redirect("./addReview.html");
+        };
+    },
+    () => {
+        Utils.enableDisplay(addReviewButton, false);
+    }
+);
 
 // get location
 const location = await dbManager.getLocation(locationId, true, true);
 
 // render location
-console.log(location);
 displayLocation(location);

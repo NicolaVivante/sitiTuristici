@@ -1,12 +1,12 @@
 export class Location {
     name;
-    location;
+    position;
     reviewsCount;
     reviewsScoreSum;
 
-    constructor(name, location) {
+    constructor(name, position) {
         this.name = name;
-        this.location = location;
+        this.position = position;
         this.reviewsCount = 0;
         this.reviewsScoreSum = 0;
     }

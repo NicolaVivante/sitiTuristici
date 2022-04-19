@@ -17,6 +17,7 @@ const locationEl = document.getElementById("location");
 const locationNameEl = document.getElementById("locationName");
 
 const descriptionEl = document.getElementById("description");
+const mediaEl = document.getElementById("media");
 
 function displayReview(review) {
     // render base properties
@@ -30,13 +31,23 @@ function displayReview(review) {
 
     userEl.dataset.userId = review.userId;
     userEl.onclick = Utils.toUserProfile;
-    usernameEl.innerText = "User name: " + review.getUser().name;
+    usernameEl.innerText = "By: " + review.getUser().name;
     userImage.src = Utils.getUserImage(review.getUser());
+    userImage.style.width = "100px";
 
     // render optional properties
     if (review.getDescription() != undefined) {
         Utils.enableDisplay(descriptionEl, true);
-        descriptionEl.innerText = review.getDescription();
+        descriptionEl.innerText = "Description: " + review.getDescription();
+    }
+
+    if (review.getMedia() != undefined) {
+        for (let mediaURL of review.getMedia()) {
+            let imgEl = document.createElement("img");
+            imgEl.src = mediaURL;
+            imgEl.style.width = '600px';
+            mediaEl.appendChild(imgEl);
+        }
     }
 
 }
@@ -48,7 +59,7 @@ homeButton.onclick = Utils.toHomePage;
 const reviewId = localStorage.getItem("reviewId");
 
 // if review to display is not defined, back to home page
-if (reviewId == null) {
+if (!reviewId || reviewId == "undefined") {
     Utils.toHomePage();
 }
 

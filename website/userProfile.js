@@ -16,22 +16,13 @@ const imageInput = document.getElementById("imageInput");
 const reviewsList = document.getElementById("reviewsList");
 const reverseFilter = document.getElementById("reverseFilter");
 const reviewFilters = document.getElementsByName("reviewFilter");
-
-authManager.onLogStateChange(
-    (loggedUser) => {
-        if (loggedUser.uid == userId) {
-
-        }
-    },
-    () => {
-        console.log("Not logged ");
-    }
-);
+let canDelete;
 
 function displayUser(user) {
     // display user data
-    usernameLabel.innerText = "User name: " + user.name;
+    usernameLabel.innerText = "Username: " + user.name;
     userImage.src = Utils.getUserImage(user);
+    userImage.style.width = '100px';
     updateReviews();
 }
 
@@ -87,16 +78,31 @@ function renderReview(review) {
     scoreEl.innerText = "Score: " + review.score;
     let locationEl = document.createElement("div");
     locationEl.innerText = "Location: " + review.getLocation().name;
-    let reviewEl = document.createElement("div");
 
+    let reviewEl = document.createElement("div");
     reviewEl.dataset.reviewId = review.getId();
     reviewEl.onclick = Utils.toReview;
     reviewEl.appendChild(titleEl);
     reviewEl.appendChild(scoreEl);
     reviewEl.appendChild(locationEl);
-    reviewEl.appendChild(document.createElement("br"));
+
+    if (canDelete) {
+        let deleteButton = document.createElement("button");
+        deleteButton.dataset.reviewId = review.getId();
+        deleteButton.innerText = "DELETE";
+        deleteButton.onclick = deleteReview;
+        reviewEl.appendChild(deleteButton);
+    }
 
     return reviewEl;
+}
+
+function deleteReview(event) {
+    event.stopPropagation();
+    let reviewId = event.target.dataset.reviewId;
+    let review = dbManager.getReview(reviewId, false, false);
+
+    console.log("deleted");
 }
 
 function updateReviews() {
@@ -125,6 +131,7 @@ function updateReviews() {
     for (let review of reviews) {
         let reviewEl = renderReview(review);
         reviewsList.appendChild(reviewEl);
+        reviewsList.appendChild(document.createElement("br"));
     }
 }
 
@@ -141,6 +148,7 @@ authManager.onLogStateChange(
     (user) => {
         // logged user is the displayed user -> allow profile editing
         if (user.uid == userId) {
+            canDelete = true;
             Utils.enableDisplay(changeImageButton, true);
             Utils.enableDisplay(changeNameButton, true);
             usernameInput.onchange = updateName;
@@ -168,7 +176,7 @@ authManager.onLogStateChange(
 const userId = localStorage.getItem("userId");
 
 // if user to display is not defined, redirect back to home page
-if (userId == null) {
+if (!userId || userId == "undefined") {
     Utils.toHomePage();
 }
 
