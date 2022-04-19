@@ -89,7 +89,7 @@ export class DBManager {
     // order given reviews by less recent, reverse array if specified
     orderReviewsByTime(reviews, flip) {
         reviews.sort(function (x, y) {
-            return y.date - x.date;
+            return y.timestamp - x.timestamp;
         });
 
         if (flip) {

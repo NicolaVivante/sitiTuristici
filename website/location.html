@@ -6,10 +6,40 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Location</title>
+    <script src="location.js" type="module"></script>
 </head>
 
 <body>
+    <button id="toHomeButton">TO HOME PAGE</button>
+    <!-- base properties -->
+    <div id="name"></div>
+    <div id="avgScore"></div>
+    <div id="revCount"></div>
 
+    <!-- other properties -->
+    <div id="description" style="display: none;"></div>
+
+    <br>
+    <br>
+    <!-- barra con i filtri -->
+    <!-- radio button per il filtro selezionato -->
+    <!-- checkbox per invertire il filtro -->
+    <form id="filters">
+        Order reviews by:<br>
+        <input type="radio" name="reviewFilter" value="score">
+        <label>Score</label>
+        <input type="radio" name="reviewFilter" value="date" checked>
+        <label>Date</label>
+        <input type="checkbox" name="reverseFilter" id="reverseFilter">
+        <label>reverse</label>
+    </form>
+    <br>
+    <!-- lista delle review -->
+    <div id="reviewsList"></div>
+
+
+    </div>
 </body>
+
 
 </html>

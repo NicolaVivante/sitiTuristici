@@ -8,37 +8,47 @@ const authManager = getAuthManager();
 const userAvatar = document.getElementById("userAvatar");
 const loginButton = document.getElementById("loginButton");
 const logoutButton = document.getElementById("logoutButton");
-const filterButton = document.getElementById("filterButton");
 const reverseFilter = document.getElementById("reverseFilter");
 const locationsList = document.getElementById("locationsList");
+const locationFilters = document.getElementsByName("locationFilter");
 
 function renderLocation(location) {
     // render location -> create element and insert into the document
-    let nameElement = document.createElement("div");
-    nameElement.innerText = "Name: " + location.name;
-    let scoreElement = document.createElement("div");
-    scoreElement.innerText = "Average score: " + location.getAvgScore();
-    let revCountElement = document.createElement("div");
-    revCountElement.innerText = "Reviews: " + location.reviewsCount;
-    let locationElement = document.createElement("div");
+    let nameEl = document.createElement("div");
+    nameEl.innerText = "Name: " + location.name;
+    let scoreEl = document.createElement("div");
+    scoreEl.innerText = "Average score: " + location.getAvgScore();
+    let revCountEl = document.createElement("div");
+    revCountEl.innerText = "Reviews: " + location.reviewsCount;
+    let locationEl = document.createElement("div");
 
-    locationElement.id = location.getId();
-    locationElement.onclick = toLocation;
-    locationElement.appendChild(nameElement);
-    locationElement.appendChild(scoreElement);
-    locationElement.appendChild(revCountElement);
-    locationElement.appendChild(document.createElement("br"));
-    locationsList.appendChild(locationElement);
+    locationEl.id = location.getId();
+    locationEl.onclick = toLocation;
+    locationEl.appendChild(nameEl);
+    locationEl.appendChild(scoreEl);
+    locationEl.appendChild(revCountEl);
+    locationEl.appendChild(document.createElement("br"));
+
+    return locationEl;
 
     // console.log(`${location.name}, average score: ${location.getAvgScore()}, number of reviews: ${location.reviewsCount}`);
 }
 
 function toLocation(event) {
-    console.log(event.target);
+    // get the element that actually fired the event (location)
     let target = event.target;
-    while (!target.hasAttribute("id")) {
+    while (target.id == "") {
         target = target.parentNode;
     }
+
+    // get location id and save it
+    const locationId = target.id;
+    localStorage.setItem("locationId", locationId);
+
+    console.log(locationId);
+
+    // redirect to location page
+    Utils.redirect("./location.html");
 }
 
 async function updateLocations() {
@@ -49,7 +59,7 @@ async function updateLocations() {
     // get the locations
     let locations = await dbManager.getAllLocations();
 
-    // filter the locations
+    // order the locations
     switch (filter) {
         case "letter":
             dbManager.orderLocationsByName(locations, reverse);
@@ -62,7 +72,7 @@ async function updateLocations() {
             break;
         default:
             dbManager.orderLocationsByName(locations, false);
-            console.log('no valid filter, sorting by alphabetical order')
+            console.log('no valid filter, sorting by alphabetical order');
     }
 
     // clear location list
@@ -70,13 +80,13 @@ async function updateLocations() {
 
     // display the locations
     for (let location of locations) {
-        renderLocation(location);
+        let locationEl = renderLocation(location);
+        locationsList.appendChild(locationEl);
     }
 }
 
 function getLocationFilter() {
-    let filters = document.getElementsByName("locationFilter");
-    for (let filter of filters) {
+    for (let filter of locationFilters) {
         if (filter.checked) {
             return filter.value;
         }
@@ -97,7 +107,10 @@ logoutButton.onclick = async function () {
     Utils.toHomePage();
 };
 
-filterButton.onclick = updateLocations;
+locationFilters.forEach((filter) => {
+    filter.onchange = updateLocations;
+})
+reverseFilter.onchange = updateLocations;
 
 
 updateLocations();

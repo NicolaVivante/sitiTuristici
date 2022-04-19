@@ -3,7 +3,7 @@ export class Review {
     userId;
     title;
     score;
-    date;
+    timestamp;
 
     constructor(locationId, userId, title, score) {
         this.locationId = locationId;
@@ -13,13 +13,13 @@ export class Review {
             throw ("Review score must be in [0-5] range");
         }
         this.score = score;
-        this.date = Date.now();
+        this.timestamp = Date.now();
     }
 
     clean() {
         this["user"] = null;
         this["id"] = null;
-        this["locationName"] = null;
+        this["location"] = null;
     }
 
     addMedia(mediaName) {
@@ -58,11 +58,11 @@ export class Review {
         return this["id"];
     }
 
-    addLocationName(locationName) {
-        this["locationName"] = locationName;
+    addLocation(location) {
+        this["location"] = location;
     }
 
-    getLocationName() {
-        return this["locationName"];
+    getLocation() {
+        return this["location"];
     }
 }

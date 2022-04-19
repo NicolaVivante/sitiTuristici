@@ -13,6 +13,9 @@ const usernameLabel = document.getElementById("username");
 const usernameInput = document.getElementById("usernameInput");
 const userImage = document.getElementById("userImage");
 const imageInput = document.getElementById("imageInput");
+const reviewsList = document.getElementById("reviewsList");
+const reverseFilter = document.getElementById("reverseFilter");
+const reviewFilters = document.getElementsByName("reviewFilter");
 
 authManager.onLogStateChange(
     (loggedUser) => {
@@ -29,11 +32,8 @@ function displayUser(user) {
     console.log(user);
     // display user data
     usernameLabel.innerText = user.name;
-    if ('image' in user) {
-        userImage.src = user.image;
-    } else {
-        userImage.src = "../default-user-icon.jpg";
-    }
+    userImage.src = Utils.getUserImage(user);
+    updateReviews();
 }
 
 async function updateImage() {
@@ -41,10 +41,10 @@ async function updateImage() {
 
     // upload file and get its URL
     await storageManager.uploadUserImage(userId, imgFile);
-    const imageURL = await storageManager.getUserImageURL(userId, imgFile.name);
+    const imageURL = (await storageManager.getUserImageURL(userId, imgFile.name));
 
     // update user profile
-    authManager.updatePhoto(imageURL);
+    await authManager.updatePhoto(imageURL);
 
     // update DB
     let user = await dbManager.getUser(userId, false);
@@ -73,16 +73,77 @@ async function updateName() {
     window.location.reload();
 }
 
+function getReviewsFilter() {
+    for (let filter of reviewFilters) {
+        if (filter.checked) {
+            return filter.value;
+        }
+    }
+}
+
+function updateReviews() {
+    // get filter and reverse options
+    const filter = getReviewsFilter();
+    const reverse = reverseFilter.checked;
+
+    let reviews = user.getReviews();
+    // order the reviews
+    switch (filter) {
+        case "score":
+            dbManager.orderReviewsByScore(reviews, reverse);
+            break;
+        case "date":
+            dbManager.orderReviewsByTime(reviews, reverse);
+            break;
+        default:
+            dbManager.orderReviewsByScore(reviews, false);
+            console.log('no valid filter, sorting by score');
+    }
+
+    // clear reviewsList
+    reviewsList.innerHTML = '';
+
+    // render reviews
+    for (let review of reviews) {
+        let reviewEl = renderReview(review);
+        reviewsList.appendChild(reviewEl);
+    }
+}
+
 // assign callbacks
 homeButton.onclick = Utils.toHomePage;
-usernameInput.onchange = updateName;
-changeImageButton.onclick = (() => imageInput.click());
-imageInput.onchange = updateImage;
-changeNameButton.onclick = function () {
-    // hide label and display text input
-    Utils.enableDisplay(usernameInput, true);
-    Utils.enableDisplay(usernameLabel, false);
-}
+
+reviewFilters.forEach((filter) => {
+    filter.onchange = updateReviews;
+})
+reverseFilter.onchange = updateReviews;
+
+
+authManager.onLogStateChange(
+    (user) => {
+        // logged user is the displayed user -> allow profile editing
+        if (user.uid == userId) {
+            Utils.enableDisplay(changeImageButton, true);
+            Utils.enableDisplay(changeNameButton, true);
+            usernameInput.onchange = updateName;
+            changeImageButton.onclick = (() => imageInput.click());
+            imageInput.onchange = updateImage;
+            changeNameButton.onclick = function () {
+                // hide label and display text input
+                Utils.enableDisplay(usernameInput, true);
+                Utils.enableDisplay(usernameLabel, false);
+            }
+
+        } else {
+            Utils.enableDisplay(changeImageButton, false);
+            Utils.enableDisplay(changeNameButton, false);
+        }
+
+    },
+    () => {
+
+    }
+);
 
 // get id of user to display
 const userId = localStorage.getItem("userId");

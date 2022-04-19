@@ -119,9 +119,9 @@ export class RealtimeDBManager extends DBManager {
             Object.setPrototypeOf(review, Review.prototype);
             if (review.userId == userId) {
                 review.addId(reviewSnap.key);
-                // add locationName 
+                // add location
                 let location = this.getLocation(review.locationId, false, false);
-                review.addLocationName(location.name);
+                review.addLocation(location);
                 userReviews.push(review);
             }
         });
@@ -189,5 +189,22 @@ export class RealtimeDBManager extends DBManager {
             user.addReviews(userReviews);
         }
         return user;
+    }
+
+    async getReview(reviewId, withuser, withLocation) {
+        let reviewRef = ref(this.db, this.REVIEWS_PATH + "/" + reviewId);
+        let review = (await get(reviewRef)).val();
+        Object.setPrototypeOf(review, Review.prototype);
+        if (withuser) {
+            let user = await this.getUser(review.userId, false);
+            review.addUser(user);
+        }
+
+        if (withLocation) {
+            let location = await this.getLocation(review.locationId, false, false);
+            review.addLocation(location);
+        }
+
+        return review;
     }
 }
