@@ -43,4 +43,8 @@ export class User {
     getReviews() {
         return this["reviews"];
     }
+
+    isAdmin() {
+        return this["admin"] != null;
+    }
 }

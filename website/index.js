@@ -116,5 +116,3 @@ authManager.onLogStateChange(
         Utils.enableDisplay(userAvatar, false);
         userAvatar.src = "../default-user-icon.jpg";
     });
-
-

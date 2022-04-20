@@ -35,11 +35,11 @@ export class RealtimeDBManager extends DBManager {
         remove(locationRef);
     }
 
-    #setLocation(locationId, location) {
+    async setLocation(locationId, location) {
         // set location at given id
         let locationRef = ref(this.db, this.LOCATIONS_PATH + "/" + locationId);
         location.clean();
-        set(locationRef, location);
+        await set(locationRef, location);
     }
 
     async getLocation(locationId, withReviews, withUsers) {
@@ -148,7 +148,7 @@ export class RealtimeDBManager extends DBManager {
         location.reviewsCount++;
         location.reviewsScoreSum += parseInt(review.score);
         // set location at review locarionId
-        this.#setLocation(review.locationId, location);
+        await this.setLocation(review.locationId, location);
 
         // add review and return id
         let reviewsRef = ref(this.db, this.REVIEWS_PATH);
@@ -174,7 +174,7 @@ export class RealtimeDBManager extends DBManager {
         location.reviewsCount--;
         location.reviewsScoreSum -= parseInt(review.score);
         // set location at review locarionId
-        this.#setLocation(review.locationId, location);
+        await this.setLocation(review.locationId, location);
 
         // remove review
         remove(reviewsRef);
@@ -211,7 +211,7 @@ export class RealtimeDBManager extends DBManager {
         return user;
     }
 
-    async getReview(reviewId, withuser, withLocations) {
+    async getReview(reviewId, withuser, withLocation) {
         let reviewRef = ref(this.db, this.REVIEWS_PATH + "/" + reviewId);
         let review = (await get(reviewRef)).val();
         Object.setPrototypeOf(review, Review.prototype);
@@ -220,36 +220,11 @@ export class RealtimeDBManager extends DBManager {
             review.addUser(user);
         }
 
-        if (withLocations) {
+        if (withLocation) {
             let location = await this.getLocation(review.locationId, false, false);
             review.addLocation(location);
         }
 
         return review;
     }
-
-    // async getLocationWithCountThree() {
-    //     const locationsSnap = ref(this.db, "locations");
-    //     let returnArray = [];
-
-    //     let allLocations = locationsSnap.val();
-    //     for (let locationId in allLocations) {
-    //         let location = allLocations[locationId];
-    //         let reviews = await this.getReviewsOfLocation(locationId, false);
-    //     }
-
-    //     // locationsRef.forEach(
-    //     // (locationSnap) => {
-    //     //     let location = locationSnap.val();
-    //     //     let locationId = locationSnap.key;
-    //     //     let revCount = location.reviewCount;
-    //     //     if (parseInt(revCount) == 3) {
-    //     //         returnArray.push(location);
-    //     //     }
-    //     // }
-    //     // );
-
-    //     return returnArray;
-    // }
-
 }

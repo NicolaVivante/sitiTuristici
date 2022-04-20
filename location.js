@@ -17,6 +17,9 @@ export class Location {
     }
 
     getAvgScore() {
+        if (this.reviewsCount == 0) {
+            return 0;
+        }
         return this.reviewsScoreSum / this.reviewsCount;
     }
 
@@ -26,6 +29,18 @@ export class Location {
 
     getReviews() {
         return this["reviews"];
+    }
+
+    addMedia(mediaName) {
+        if ("media" in this) {
+            this["media"].push(mediaName);
+        } else {
+            this["media"] = [mediaName];
+        }
+    }
+
+    getMedia() {
+        return this["media"];
     }
 
     addId(id) {

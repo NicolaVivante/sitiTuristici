@@ -39,6 +39,11 @@ export class StorageManager {
         return await getDownloadURL(storageRef);
     }
 
+    async deleteUserImage(userId) {
+        const storageRef = ref(this.storage, this.USERS_MEDIA_PATH + "/" + userId);
+        await this.removeAllChilds(storageRef);
+    }
+
     async uploadReviewMedia(reviewId, file) {
         const storageRef = ref(this.storage, this.REVIEWS_MEDIA_PATH);
         const reviewRef = ref(storageRef, "/" + reviewId);
@@ -62,6 +67,32 @@ export class StorageManager {
 
     async deleteReviewMedia(reviewId) {
         const storageRef = ref(this.storage, this.REVIEWS_MEDIA_PATH + "/" + reviewId);
+        await this.removeAllChilds(storageRef);
+    }
+
+    async uploadLocationMedia(locationId, file) {
+        const storageRef = ref(this.storage, this.LOCATIONS_MEDIA_PATH);
+        const locationRef = ref(storageRef, "/" + locationId);
+
+        await this.removeAllChilds(locationRef);
+        const fileRef = ref(locationRef, "/" + file.name);
+
+        await uploadBytes(fileRef, file).then((snapshot) => {
+            console.log('Location file uploaded');
+        }).catch((error) => {
+            const errorCode = error.errorCode;
+            const errorMessage = error.message;
+            console.log(errorMessage + ", " + errorCode);
+        });
+    }
+
+    async getLocationMediaURL(locationId, fileName) {
+        const storageRef = ref(this.storage, this.LOCATIONS_MEDIA_PATH + "/" + locationId + "/" + fileName);
+        return await getDownloadURL(storageRef);
+    }
+
+    async deleteLocationMedia(locationId) {
+        const storageRef = ref(this.storage, this.LOCATIONS_MEDIA_PATH + "/" + locationId);
         await this.removeAllChilds(storageRef);
     }
 }

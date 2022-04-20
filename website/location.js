@@ -10,6 +10,7 @@ const nameEl = document.getElementById("name");
 const avgScoreEl = document.getElementById("avgScore");
 const revCountEl = document.getElementById("revCount");
 const descriptionEl = document.getElementById("description");
+const mediaEl = document.getElementById("media");
 const reviewsList = document.getElementById("reviewsList");
 const reverseFilter = document.getElementById("reverseFilter");
 const reviewFilters = document.getElementsByName("reviewFilter");
@@ -22,6 +23,8 @@ function renderReview(review) {
     scoreEl.innerText = "Score: " + review.score;
     let userEl = document.createElement("div");
     userEl.innerText = "User: " + review.getUser().name;
+    let dateEl = document.createElement("div");
+    dateEl.innerText = "Date: " + Utils.timestampToDate(review.timestamp);
     let reviewEl = document.createElement("div");
 
     reviewEl.dataset.reviewId = review.getId();
@@ -29,6 +32,7 @@ function renderReview(review) {
     reviewEl.appendChild(titleEl);
     reviewEl.appendChild(scoreEl);
     reviewEl.appendChild(userEl);
+    reviewEl.appendChild(dateEl);
     reviewEl.appendChild(document.createElement("br"));
 
     return reviewEl;
@@ -44,6 +48,15 @@ function displayLocation(location) {
     if (location.getDescription() != undefined) {
         Utils.enableDisplay(descriptionEl, true);
         descriptionEl.innerText = location.getDescription();
+    }
+
+    if (location.getMedia() != undefined) {
+        for (let mediaURL of location.getMedia()) {
+            let imgEl = document.createElement("img");
+            imgEl.src = mediaURL;
+            imgEl.style.width = '300px';
+            mediaEl.appendChild(imgEl);
+        }
     }
 
     updateReviews();

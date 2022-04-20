@@ -9,6 +9,7 @@ const authManager = getAuthManager();
 const homeButton = document.getElementById("toHomeButton");
 const changeNameButton = document.getElementById("changeNameButton");
 const changeImageButton = document.getElementById("changeImgButton");
+const deleteImageButton = document.getElementById("deleteImgButton");
 const usernameLabel = document.getElementById("username");
 const usernameInput = document.getElementById("usernameInput");
 const userImage = document.getElementById("userImage");
@@ -39,6 +40,22 @@ async function updateImage() {
     // update DB
     let user = await dbManager.getUser(userId, false);
     user.setImage(imageURL);
+    await dbManager.setUser(userId, user);
+
+    // reload the page
+    window.location.reload();
+}
+
+async function removeImage() {
+    // update user profile
+    await authManager.updatePhoto(null);
+
+    // remove file from storage
+    await storageManager.deleteUserImage(userId);
+
+    // update DB
+    let user = await dbManager.getUser(userId, false);
+    user.setImage(null);
     await dbManager.setUser(userId, user);
 
     // reload the page
@@ -152,9 +169,11 @@ authManager.onLogStateChange(
             canDelete = true;
             Utils.enableDisplay(changeImageButton, true);
             Utils.enableDisplay(changeNameButton, true);
+            Utils.enableDisplay(deleteImageButton, true);
             usernameInput.onchange = updateName;
             changeImageButton.onclick = (() => imageInput.click());
             imageInput.onchange = updateImage;
+            deleteImageButton.onclick = removeImage;
             changeNameButton.onclick = function () {
                 // hide label and display text input
                 Utils.enableDisplay(usernameInput, true);
@@ -164,12 +183,14 @@ authManager.onLogStateChange(
         } else {
             Utils.enableDisplay(changeImageButton, false);
             Utils.enableDisplay(changeNameButton, false);
+            Utils.enableDisplay(deleteImageButton, false);
         }
 
     },
     () => {
         Utils.enableDisplay(changeImageButton, false);
         Utils.enableDisplay(changeNameButton, false);
+        Utils.enableDisplay(deleteImageButton, false);
     }
 );
 

@@ -23,7 +23,6 @@ homeButton.onclick = Utils.toHomePage;
 reviewForm.onsubmit = async function (event) {
     event.preventDefault();
 
-
     const title = reviewTitleEl.value;
     const score = reviewScoreEl.value;
     const description = reviewDescriptionEl.value;
