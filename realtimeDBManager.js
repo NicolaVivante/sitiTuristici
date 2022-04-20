@@ -24,13 +24,13 @@ export class RealtimeDBManager extends DBManager {
         onValue(dbRef, snap => callBack(snap.val()));
     }
 
-    addLocation(location) {
+    async addLocation(location) {
         let locationsRef = ref(this.db, this.LOCATIONS_PATH);
         location.clean();
         return push(locationsRef, location).key;
     }
 
-    removeLocation(locationId) {
+    async removeLocation(locationId) {
         let locationRef = ref(this.db, this.LOCATIONS_PATH + "/" + locationId);
         remove(locationRef);
     }
@@ -196,6 +196,9 @@ export class RealtimeDBManager extends DBManager {
     async getUser(userId, withReviews, withLocations) {
         let userRef = ref(this.db, this.USERS_PATH + "/" + userId);
         let user = (await get(userRef)).val();
+        if (user == null) {
+            throw (`User with id ${userId} not found`);
+        }
         Object.setPrototypeOf(user, User.prototype);
         if (withReviews) {
             let userReviews = await this.getReviewsOfUser(userId, withLocations);
@@ -207,6 +210,9 @@ export class RealtimeDBManager extends DBManager {
     async getReview(reviewId, withuser, withLocation) {
         let reviewRef = ref(this.db, this.REVIEWS_PATH + "/" + reviewId);
         let review = (await get(reviewRef)).val();
+        if (review == null) {
+            throw (`Review with id ${reviewId} not found`);
+        }
         Object.setPrototypeOf(review, Review.prototype);
         if (withuser) {
             let user = await this.getUser(review.userId, false);
