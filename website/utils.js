@@ -6,7 +6,7 @@ const dbManager = getDBManager();
 const authManager = getAuthManager();
 
 export function enableDisplay(element, enable) {
-    element.style.display = enable ? "inline-block" : "none";
+    element.hidden = enable;
 }
 
 export function toHomePage() {
