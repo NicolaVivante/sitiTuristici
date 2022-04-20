@@ -1,6 +1,7 @@
-import { getFirestore, collection, addDoc, query, getDocs, where } from "https://www.gstatic.com/firebasejs/9.6.9/firebase-firestore.js";
+import { getFirestore, collection, doc, addDoc, setDoc, getDoc, deleteDoc, query, getDocs, where } from "https://www.gstatic.com/firebasejs/9.6.9/firebase-firestore.js";
 import { DBManager } from "./DBManager.js";
 import { Location } from "./Location.js";
+import { Review } from "./Review.js";
 
 export class FirestoreDBManager extends DBManager {
 
@@ -14,8 +15,6 @@ export class FirestoreDBManager extends DBManager {
         this.firestore = getFirestore(app);
     }
 
-    // override
-
     // call given callback each time db changes
     onDBChange(callBack) { }
 
@@ -28,13 +27,33 @@ export class FirestoreDBManager extends DBManager {
     }
 
     // remove location at given id
-    removeLocation(locationId) { }
+    async removeLocation(locationId) {
+        const docRef = doc(this.firestore, this.LOCATIONS_PATH + "/" + locationId);
+        await deleteDoc(docRef);
+    }
 
     // set location at given id
-    async setLocation(locationId, location) { }
+    async setLocation(locationId, location) {
+        const docRef = doc(this.firestore, this.LOCATIONS_PATH + "/" + locationId);
+        location.clean();
+        Object.setPrototypeOf(location, Object.prototype);
+        await setDoc(docRef, location);
+    }
 
     // get location with given id, with reviews if specified
-    async getLocation(locationId, withReviews, withUsers) { }
+    async getLocation(locationId, withReviews, withUsers) {
+        const docRef = doc(this.firestore, this.LOCATIONS_PATH + "/" + locationId);
+        let location = (await getDoc(docRef)).data();
+        if (location == undefined) {
+            throw (`Location with id ${locationId} not found`);
+        }
+        Object.setPrototypeOf(location, Location.prototype);
+        if (withReviews) {
+            let reviews = await this.getReviewsOfLocation(locationId, withUsers);
+            location.addReviews(reviews);
+        }
+        return location;
+    }
 
     // get all locations
     async getAllLocations() {
@@ -60,7 +79,22 @@ export class FirestoreDBManager extends DBManager {
     async getAllReviews() { }
 
     // get all reviews of location with given id with the user who created the review if specified
-    async getReviewsOfLocation(locationId, withUsers) { }
+    async getReviewsOfLocation(locationId, withUsers) {
+        let reviews = [];
+        const reviewsCollRef = collection(this.firestore, this.REVIEWS_PATH);
+        const q = query(reviewsCollRef, where("locationId", "==", locationId));
+        const querySnap = await getDocs(q);
+        for (let doc of querySnap.docs) {
+            let review = doc.val();
+            Object.setPrototypeOf(review, Review.prototype);
+            if (withUsers) {
+                let user = await this.getUser(review.userId, false, false);
+                review.addUser(user);
+            }
+            reviews.push(review);
+        }
+        return reviews;
+    }
 
     // get all reviews of user with given id with the reviewed location if specified
     async getReviewsOfUser(userId, withLocations) { }
