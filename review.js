@@ -22,18 +22,6 @@ export class Review {
         this["location"] = null;
     }
 
-    addMedia(mediaName) {
-        if ("media" in this) {
-            this["media"].push(mediaName);
-        } else {
-            this["media"] = [mediaName];
-        }
-    }
-
-    getMedia() {
-        return this["media"];
-    }
-
     addDescription(description) {
         this["description"] = description;
     }

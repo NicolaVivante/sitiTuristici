@@ -28,19 +28,15 @@ export class User {
         return this["description"];
     }
 
-    setImage(imageURL) {
-        this["image"] = imageURL;
-    }
-
-    getImage() {
-        return this["image"];
-    }
-
     addReviews(reviews) {
         this["reviews"] = reviews;
     }
 
     getReviews() {
         return this["reviews"];
+    }
+
+    isAdmin() {
+        return this["admin"] != null;
     }
 }

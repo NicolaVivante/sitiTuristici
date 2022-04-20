@@ -1,3 +1,10 @@
+import { init, getDBManager, getAuthManager, getStorageManager } from "./init.js";
+
+init();
+const storageManager = getStorageManager();
+const dbManager = getDBManager();
+const authManager = getAuthManager();
+
 export function enableDisplay(element, enable) {
     element.style.display = enable ? "inline-block" : "none";
 }
@@ -10,12 +17,12 @@ export function redirect(path) {
     window.location.replace(path);
 }
 
-export function getUserImage(user) {
-    if ('image' in user) {
-        return user.getImage();
-    } else {
+export async function getUserImage(userId) {
+    const imgURL = await storageManager.getUserImageURL(userId);
+    if (imgURL == null) {
         return "../default-user-icon.jpg";
     }
+    return imgURL;
 }
 
 export function timestampToDate(timestamp) {

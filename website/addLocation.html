@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add location</title>
+    <script src="addLocation.js" type="module"></script>
+</head>
+
+<body>
+    <button id="toHomeButton">TO HOME PAGE</button>
+    <br>
+    <form id="locationForm">
+        <label for="locationName">Name: </label>
+        <input type="text" name="input" id="locationName" required>
+        <br>
+        <label for="locationPosition">Location (google maps url): </label>
+        <input type="text" name="optionalInput" id="locationPosition" required>
+        <br>
+        <label for="locationDescription">Description: </label>
+        <input type="text" name="optionalInput" id="locationDescription">
+        <br>
+        <label for="locationMedia">Media: </label>
+        <input type="file" name="optionalInput" id="locationMedia" accept="image/*" multiple>
+        <br>
+        <button id="submitLocation">ADD LOCATION</button>
+    </form>
+</body>
+
+</html>

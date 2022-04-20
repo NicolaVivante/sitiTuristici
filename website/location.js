@@ -1,15 +1,17 @@
 import * as Utils from "./utils.js";
-import { init, getDBManager, getAuthManager } from "./init.js";
+import { init, getDBManager, getAuthManager, getStorageManager } from "./init.js";
 
 init();
 const dbManager = getDBManager();
 const authManager = getAuthManager();
+const storageManager = getStorageManager();
 
 const homeButton = document.getElementById("toHomeButton");
 const nameEl = document.getElementById("name");
 const avgScoreEl = document.getElementById("avgScore");
 const revCountEl = document.getElementById("revCount");
 const descriptionEl = document.getElementById("description");
+const mediaEl = document.getElementById("media");
 const reviewsList = document.getElementById("reviewsList");
 const reverseFilter = document.getElementById("reverseFilter");
 const reviewFilters = document.getElementsByName("reviewFilter");
@@ -22,6 +24,8 @@ function renderReview(review) {
     scoreEl.innerText = "Score: " + review.score;
     let userEl = document.createElement("div");
     userEl.innerText = "User: " + review.getUser().name;
+    let dateEl = document.createElement("div");
+    dateEl.innerText = "Date: " + Utils.timestampToDate(review.timestamp);
     let reviewEl = document.createElement("div");
 
     reviewEl.dataset.reviewId = review.getId();
@@ -29,12 +33,13 @@ function renderReview(review) {
     reviewEl.appendChild(titleEl);
     reviewEl.appendChild(scoreEl);
     reviewEl.appendChild(userEl);
+    reviewEl.appendChild(dateEl);
     reviewEl.appendChild(document.createElement("br"));
 
     return reviewEl;
 }
 
-function displayLocation(location) {
+async function displayLocation(location) {
     // render base properties
     nameEl.innerText = "Name: " + location.name;
     avgScoreEl.innerText = "Average score: " + location.getAvgScore();
@@ -44,6 +49,16 @@ function displayLocation(location) {
     if (location.getDescription() != undefined) {
         Utils.enableDisplay(descriptionEl, true);
         descriptionEl.innerText = location.getDescription();
+    }
+
+    let mediaURLs = await storageManager.getLocationMediaURLs(locationId);
+    if (mediaURLs != null) {
+        for (let mediaURL of mediaURLs) {
+            let imgEl = document.createElement("img");
+            imgEl.src = mediaURL;
+            imgEl.style.width = '300px';
+            mediaEl.appendChild(imgEl);
+        }
     }
 
     updateReviews();

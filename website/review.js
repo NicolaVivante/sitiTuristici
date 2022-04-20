@@ -1,8 +1,9 @@
 import * as Utils from "./utils.js";
-import { init, getDBManager } from "./init.js";
+import { init, getDBManager, getStorageManager } from "./init.js";
 
 init();
 const dbManager = getDBManager();
+const storageManager = getStorageManager();
 
 const homeButton = document.getElementById("toHomeButton");
 const titleEl = document.getElementById("title");
@@ -18,8 +19,9 @@ const locationNameEl = document.getElementById("locationName");
 
 const descriptionEl = document.getElementById("description");
 const mediaEl = document.getElementById("media");
+let reviewId;
 
-function displayReview(review) {
+async function displayReview(review) {
     // render base properties
     titleEl.innerText = "Review title: " + review.title;
     scoreEl.innerText = "Review score: " + review.score;
@@ -32,7 +34,7 @@ function displayReview(review) {
     userEl.dataset.userId = review.userId;
     userEl.onclick = Utils.toUserProfile;
     usernameEl.innerText = "By: " + review.getUser().name;
-    userImage.src = Utils.getUserImage(review.getUser());
+    userImage.src = await Utils.getUserImage(review.userId);
     userImage.style.width = "100px";
 
     // render optional properties
@@ -41,11 +43,12 @@ function displayReview(review) {
         descriptionEl.innerText = "Description: " + review.getDescription();
     }
 
-    if (review.getMedia() != undefined) {
-        for (let mediaURL of review.getMedia()) {
+    let mediaURLs = await storageManager.getReviewMediaURLs(reviewId);
+    if (mediaURLs != null) {
+        for (let mediaURL of mediaURLs) {
             let imgEl = document.createElement("img");
             imgEl.src = mediaURL;
-            imgEl.style.width = '600px';
+            imgEl.style.width = '300px';
             mediaEl.appendChild(imgEl);
         }
     }
@@ -56,7 +59,7 @@ function displayReview(review) {
 homeButton.onclick = Utils.toHomePage;
 
 // get id of review to display
-const reviewId = localStorage.getItem("reviewId");
+reviewId = localStorage.getItem("reviewId");
 
 // if review to display is not defined, back to home page
 if (!reviewId || reviewId == "undefined") {

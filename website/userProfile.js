@@ -9,6 +9,7 @@ const authManager = getAuthManager();
 const homeButton = document.getElementById("toHomeButton");
 const changeNameButton = document.getElementById("changeNameButton");
 const changeImageButton = document.getElementById("changeImgButton");
+const deleteImageButton = document.getElementById("deleteImgButton");
 const usernameLabel = document.getElementById("username");
 const usernameInput = document.getElementById("usernameInput");
 const userImage = document.getElementById("userImage");
@@ -17,11 +18,12 @@ const reviewsList = document.getElementById("reviewsList");
 const reverseFilter = document.getElementById("reverseFilter");
 const reviewFilters = document.getElementsByName("reviewFilter");
 let canDelete;
+let userId;
 
-function displayUser(user) {
+async function displayUser(user) {
     // display user data
     usernameLabel.innerText = "Username: " + user.name;
-    userImage.src = Utils.getUserImage(user);
+    userImage.src = await Utils.getUserImage(userId);
     userImage.style.width = '100px';
     updateReviews();
 }
@@ -36,10 +38,16 @@ async function updateImage() {
     // update user profile
     await authManager.updatePhoto(imageURL);
 
-    // update DB
-    let user = await dbManager.getUser(userId, false);
-    user.setImage(imageURL);
-    await dbManager.setUser(userId, user);
+    // reload the page
+    window.location.reload();
+}
+
+async function removeImage() {
+    // update user profile
+    await authManager.updatePhoto(null);
+
+    // remove file from storage
+    await storageManager.deleteUserImage(userId);
 
     // reload the page
     window.location.reload();
@@ -152,9 +160,11 @@ authManager.onLogStateChange(
             canDelete = true;
             Utils.enableDisplay(changeImageButton, true);
             Utils.enableDisplay(changeNameButton, true);
+            Utils.enableDisplay(deleteImageButton, true);
             usernameInput.onchange = updateName;
             changeImageButton.onclick = (() => imageInput.click());
             imageInput.onchange = updateImage;
+            deleteImageButton.onclick = removeImage;
             changeNameButton.onclick = function () {
                 // hide label and display text input
                 Utils.enableDisplay(usernameInput, true);
@@ -164,17 +174,19 @@ authManager.onLogStateChange(
         } else {
             Utils.enableDisplay(changeImageButton, false);
             Utils.enableDisplay(changeNameButton, false);
+            Utils.enableDisplay(deleteImageButton, false);
         }
 
     },
     () => {
         Utils.enableDisplay(changeImageButton, false);
         Utils.enableDisplay(changeNameButton, false);
+        Utils.enableDisplay(deleteImageButton, false);
     }
 );
 
 // get id of user to display
-const userId = localStorage.getItem("userId");
+userId = localStorage.getItem("userId");
 
 // if user to display is not defined, redirect back to home page
 if (!userId || userId == "undefined") {

@@ -17,6 +17,9 @@ export class Location {
     }
 
     getAvgScore() {
+        if (this.reviewsCount == 0) {
+            return 0;
+        }
         return this.reviewsScoreSum / this.reviewsCount;
     }
 
