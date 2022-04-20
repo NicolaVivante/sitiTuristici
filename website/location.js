@@ -1,9 +1,10 @@
 import * as Utils from "./utils.js";
-import { init, getDBManager, getAuthManager } from "./init.js";
+import { init, getDBManager, getAuthManager, getStorageManager } from "./init.js";
 
 init();
 const dbManager = getDBManager();
 const authManager = getAuthManager();
+const storageManager = getStorageManager();
 
 const homeButton = document.getElementById("toHomeButton");
 const nameEl = document.getElementById("name");
@@ -38,7 +39,7 @@ function renderReview(review) {
     return reviewEl;
 }
 
-function displayLocation(location) {
+async function displayLocation(location) {
     // render base properties
     nameEl.innerText = "Name: " + location.name;
     avgScoreEl.innerText = "Average score: " + location.getAvgScore();
@@ -50,8 +51,9 @@ function displayLocation(location) {
         descriptionEl.innerText = location.getDescription();
     }
 
-    if (location.getMedia() != undefined) {
-        for (let mediaURL of location.getMedia()) {
+    let mediaURLs = await storageManager.getLocationMediaURLs(locationId);
+    if (mediaURLs != null) {
+        for (let mediaURL of mediaURLs) {
             let imgEl = document.createElement("img");
             imgEl.src = mediaURL;
             imgEl.style.width = '300px';

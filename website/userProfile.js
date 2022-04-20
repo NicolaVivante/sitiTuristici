@@ -18,11 +18,12 @@ const reviewsList = document.getElementById("reviewsList");
 const reverseFilter = document.getElementById("reverseFilter");
 const reviewFilters = document.getElementsByName("reviewFilter");
 let canDelete;
+let userId;
 
-function displayUser(user) {
+async function displayUser(user) {
     // display user data
     usernameLabel.innerText = "Username: " + user.name;
-    userImage.src = Utils.getUserImage(user);
+    userImage.src = await Utils.getUserImage(userId);
     userImage.style.width = '100px';
     updateReviews();
 }
@@ -37,11 +38,6 @@ async function updateImage() {
     // update user profile
     await authManager.updatePhoto(imageURL);
 
-    // update DB
-    let user = await dbManager.getUser(userId, false);
-    user.setImage(imageURL);
-    await dbManager.setUser(userId, user);
-
     // reload the page
     window.location.reload();
 }
@@ -52,11 +48,6 @@ async function removeImage() {
 
     // remove file from storage
     await storageManager.deleteUserImage(userId);
-
-    // update DB
-    let user = await dbManager.getUser(userId, false);
-    user.setImage(null);
-    await dbManager.setUser(userId, user);
 
     // reload the page
     window.location.reload();
@@ -195,7 +186,7 @@ authManager.onLogStateChange(
 );
 
 // get id of user to display
-const userId = localStorage.getItem("userId");
+userId = localStorage.getItem("userId");
 
 // if user to display is not defined, redirect back to home page
 if (!userId || userId == "undefined") {

@@ -31,18 +31,6 @@ export class Location {
         return this["reviews"];
     }
 
-    addMedia(mediaName) {
-        if ("media" in this) {
-            this["media"].push(mediaName);
-        } else {
-            this["media"] = [mediaName];
-        }
-    }
-
-    getMedia() {
-        return this["media"];
-    }
-
     addId(id) {
         this["id"] = id;
     }

@@ -28,16 +28,6 @@ locationForm.onsubmit = async function (event) {
     }
 
     const locationId = await dbManager.addLocation(location);
-
-    if (locationMediaEl.files.length > 0) {
-        for (let file of locationMediaEl.files) {
-            // upload file and get its URL
-            await storageManager.uploadLocationMedia(locationId, file);
-            const mediaURL = (await storageManager.getLocationMediaURL(locationId, file.name));
-            location.addMedia(mediaURL);
-        }
-    }
-    await dbManager.setLocation(locationId, location);
     Utils.toHomePage();
 }
 

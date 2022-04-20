@@ -34,9 +34,14 @@ export class StorageManager {
         });
     }
 
-    async getUserImageURL(userId, imageName) {
-        const storageRef = ref(this.storage, this.USERS_MEDIA_PATH + "/" + userId + "/" + imageName);
-        return await getDownloadURL(storageRef);
+    async getUserImageURL(userId) {
+        const storageRef = ref(this.storage, this.USERS_MEDIA_PATH + "/" + userId);
+        const media = (await listAll(storageRef));
+        if (media.items.length == 0) {
+            console.log("No media for this user");
+            return null;
+        }
+        return await getDownloadURL(media.items[0]);
     }
 
     async deleteUserImage(userId) {
@@ -60,9 +65,18 @@ export class StorageManager {
         });
     }
 
-    async getReviewMediaURL(reviewId, fileName) {
-        const storageRef = ref(this.storage, this.REVIEWS_MEDIA_PATH + "/" + reviewId + "/" + fileName);
-        return await getDownloadURL(storageRef);
+    async getReviewMediaURLs(reviewId) {
+        const storageRef = ref(this.storage, this.REVIEWS_MEDIA_PATH + "/" + reviewId);
+        const media = (await listAll(storageRef));
+        if (media.items.length == 0) {
+            console.log("No media for this review");
+            return null;
+        }
+        let mediaURLs = [];
+        for (let mediaRef of media.items) {
+            mediaURLs.push(await getDownloadURL(mediaRef));
+        }
+        return mediaURLs;
     }
 
     async deleteReviewMedia(reviewId) {
@@ -86,9 +100,18 @@ export class StorageManager {
         });
     }
 
-    async getLocationMediaURL(locationId, fileName) {
-        const storageRef = ref(this.storage, this.LOCATIONS_MEDIA_PATH + "/" + locationId + "/" + fileName);
-        return await getDownloadURL(storageRef);
+    async getLocationMediaURLs(locationId) {
+        const storageRef = ref(this.storage, this.LOCATIONS_MEDIA_PATH + "/" + locationId);
+        const media = (await listAll(storageRef));
+        if (media.items.length == 0) {
+            console.log("No media for this location");
+            return null;
+        }
+        let mediaURLs = [];
+        for (let mediaRef of media.items) {
+            mediaURLs.push(await getDownloadURL(mediaRef));
+        }
+        return mediaURLs;
     }
 
     async deleteLocationMedia(locationId) {

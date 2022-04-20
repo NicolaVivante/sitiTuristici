@@ -106,7 +106,8 @@ authManager.onLogStateChange(
         Utils.enableDisplay(loginButton, false);
         Utils.enableDisplay(logoutButton, true);
         userAvatar.dataset.userId = authUser.uid;
-        userAvatar.src = Utils.getUserImage(user);
+        userAvatar.src = await Utils.getUserImage(authUser.uid);
+        userAvatar.style.width = "100px";
         userAvatar.title = user.name;
     },
     // when not logged
