@@ -25,13 +25,13 @@ function updateLogOptions() {
         if (filter.checked) {
             switch (filter.value) {
                 case "login": {
-                    Utils.enableDisplay(loginForm, false);
-                    Utils.enableDisplay(registerForm, true);
+                    Utils.enableDisplay(loginForm, true);
+                    Utils.enableDisplay(registerForm, false);
                     break;
                 }
                 case "register": {
-                    Utils.enableDisplay(loginForm, true);
-                    Utils.enableDisplay(registerForm, false);
+                    Utils.enableDisplay(loginForm, false);
+                    Utils.enableDisplay(registerForm, true);
                     break;
                 }
             }

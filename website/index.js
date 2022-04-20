@@ -102,7 +102,7 @@ authManager.onLogStateChange(
     async function (authUser) {
         let user = await dbManager.getUser(authUser.uid, false, false);
         //console.log(`Name: ${user.displayName}, email: ${user.email}`);
-        //console.log(user);
+        console.log(user);
         Utils.enableDisplay(loginButton, false);
         Utils.enableDisplay(logoutButton, true);
         userAvatar.dataset.userId = authUser.uid;
@@ -114,6 +114,6 @@ authManager.onLogStateChange(
     () => {
         Utils.enableDisplay(loginButton, true);
         Utils.enableDisplay(logoutButton, false);
-        Utils.enableDisplay(userAvatar, false);
         userAvatar.src = "../default-user-icon.jpg";
+        Utils.enableDisplay(userAvatar, false);
     });
