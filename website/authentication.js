@@ -25,13 +25,13 @@ function updateLogOptions() {
         if (filter.checked) {
             switch (filter.value) {
                 case "login": {
-                    Utils.enableDisplay(loginForm, true);
-                    Utils.enableDisplay(registerForm, false);
+                    Utils.enableDisplay(loginForm, false);
+                    Utils.enableDisplay(registerForm, true);
                     break;
                 }
                 case "register": {
-                    Utils.enableDisplay(loginForm, false);
-                    Utils.enableDisplay(registerForm, true);
+                    Utils.enableDisplay(loginForm, true);
+                    Utils.enableDisplay(registerForm, false);
                     break;
                 }
             }
@@ -84,7 +84,7 @@ async function register(event) {
 }
 
 // assign callbacks
-//  homeButton.onclick = Utils.toHomePage;
+homeButton.onclick = Utils.toHomePage;
 logOptions.onchange = updateLogOptions;
 loginForm.onsubmit = login;
 registerForm.onsubmit = register;
