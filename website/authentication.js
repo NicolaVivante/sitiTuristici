@@ -39,6 +39,7 @@ function updateLogOptions() {
     }
 }
 
+
 async function login(event) {
     event.preventDefault(); // prevent page reload
 
@@ -83,7 +84,7 @@ async function register(event) {
 }
 
 // assign callbacks
-homeButton.onclick = Utils.toHomePage;
+//  homeButton.onclick = Utils.toHomePage;
 logOptions.onchange = updateLogOptions;
 loginForm.onsubmit = login;
 registerForm.onsubmit = register;
