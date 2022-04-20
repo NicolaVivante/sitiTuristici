@@ -156,13 +156,6 @@ export class RealtimeDBManager extends DBManager {
         return push(reviewsRef, review).key;
     }
 
-    // USE ONLY TO ADD MEDIA TO REVIEW
-    async setReview(reviewId, review) {
-        let reviewsRef = ref(this.db, this.REVIEWS_PATH + "/" + reviewId);
-        review.clean();
-        await set(reviewsRef, review);
-    }
-
     async removeReview(reviewId) {
         // get review from id
         let reviewsRef = ref(this.db, this.REVIEWS_PATH + "/" + reviewId);

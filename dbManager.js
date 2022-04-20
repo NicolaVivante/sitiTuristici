@@ -38,9 +38,6 @@ export class DBManager {
     // add given review to review list and return the review id
     async addReview(review) { }
 
-    // USE ONLY TO ADD MEDIA TO REVIEW
-    async setReview(reviewId, review) { }
-
     // remove review at given id
     async removeReview(reviewId) { }
 
