@@ -44,7 +44,7 @@ export class RealtimeDBManager extends DBManager {
 
     async getLocation(locationId, withReviews, withUsers) {
         // retrieve location
-        let locationRef = ref(this.db, this.LOCATIONS_PATH + "/" + locationId);
+        const locationRef = ref(this.db, this.LOCATIONS_PATH + "/" + locationId);
         let location = (await get(locationRef)).val();
         if (location == null) {
             throw (`Location with id ${locationId} not found`);
@@ -60,7 +60,7 @@ export class RealtimeDBManager extends DBManager {
     }
 
     async getAllLocations() {
-        let locationsRef = ref(this.db, this.LOCATIONS_PATH);
+        const locationsRef = ref(this.db, this.LOCATIONS_PATH);
         let locationsSnap = await get(locationsRef);
         let locations = [];
         locationsSnap.forEach(locationSnap => {
@@ -74,7 +74,7 @@ export class RealtimeDBManager extends DBManager {
     }
 
     async getAllReviews() {
-        let reviewsRef = ref(this.db, this.REVIEWS_PATH);
+        const reviewsRef = ref(this.db, this.REVIEWS_PATH);
         let allReviewsSnap = await get(reviewsRef);
         let reviews = [];
         allReviewsSnap.forEach(reviewSnap => {

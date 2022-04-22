@@ -17,6 +17,8 @@ let location = await dbManager.getLocation(id, false, false);
 await fdbManager.setLocation(id, location);
 //await fdbManager.removeLocation(id);
 let fLocation = await fdbManager.getLocation(id, true, true);
+console.log(location);
 console.log(fLocation);
 
-// let a = await fdbManager.addLocation(location);
+let a = await fdbManager.addLocation(location);
+console.log(a);

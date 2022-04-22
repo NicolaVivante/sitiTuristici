@@ -40,6 +40,13 @@ function updateLogOptions() {
 }
 
 
+function assegnaCiao() {
+    const logOptions = document.getElementsByName("logOption");
+    for (const filter of logOptions) {
+        filter.onclick = ciao;
+    }
+}
+
 async function login(event) {
     event.preventDefault(); // prevent page reload
 
