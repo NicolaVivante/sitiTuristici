@@ -19,11 +19,6 @@ export class RealtimeDBManager extends DBManager {
         this.db = getDatabase(app);
     }
 
-    onDBChange(callBack) {
-        let dbRef = ref(this.db);
-        onValue(dbRef, snap => callBack(snap.val()));
-    }
-
     async addLocation(location) {
         let locationsRef = ref(this.db, this.LOCATIONS_PATH);
         location.clean();
@@ -126,19 +121,6 @@ export class RealtimeDBManager extends DBManager {
         };
 
         return userReviews;
-        // allReviewsSnap.forEach((reviewSnap) => {
-        //     let review = reviewSnap.val()
-        //     Object.setPrototypeOf(review, Review.prototype);
-        //     if (review.userId == userId) {
-        //         review.addId(reviewSnap.key);
-        //         // add location
-        //         if (withLocations) {
-        //             let location = this.getLocation(review.locationId, false, false);
-        //             review.addLocation(location);
-        //         }
-        //         userReviews.push(review);
-        //     }
-        // });
     }
 
     async addReview(review) {

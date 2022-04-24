@@ -15,9 +15,6 @@ export class FirestoreDBManager extends DBManager {
         this.firestore = getFirestore(app);
     }
 
-    // call given callback each time db changes
-    onDBChange(callBack) { }
-
     // add given location to locations list and return the location id
     async addLocation(location) {
         const collectionRef = collection(this.firestore, this.LOCATIONS_PATH);

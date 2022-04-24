@@ -8,9 +8,6 @@ export class DBManager {
 
     // override
 
-    // call given callback each time db changes
-    onDBChange(callBack) { }
-
     // add given location to locations list and return the location id
     addLocation(location) { }
 
