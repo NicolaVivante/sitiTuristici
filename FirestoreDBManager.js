@@ -23,12 +23,9 @@ export class FirestoreDBManager extends DBManager {
         const collectionRef = collection(this.firestore, this.LOCATIONS_PATH);
         location.clean();
         Object.setPrototypeOf(location, Object.prototype);
-        const ref = (await addDoc(collectionRef, location));
-        console.log(ref);
-        //TODO: fix path return
-        const path = ref.path;
+        const id = (await addDoc(collectionRef, location)).id;
         Object.setPrototypeOf(location, Location.prototype);
-        return path;
+        return id;
     }
 
     // remove location at given id
@@ -142,22 +139,83 @@ export class FirestoreDBManager extends DBManager {
         const collectionRef = collection(this.firestore, this.REVIEWS_PATH);
         review.clean();
         Object.setPrototypeOf(review, Object.prototype);
-        return (await addDoc(collectionRef, review)).path;
-        //TODO: fix path return
+        const id = (await addDoc(collectionRef, review)).id;
+        Object.setPrototypeOf(review, Review.prototype);
+        return id;
     }
 
     // remove review at given id
-    async removeReview(reviewId) { }
+    async removeReview(reviewId) {
+        const docRef = doc(this.firestore, this.REVIEWS_PATH + "/" + reviewId);
+        await deleteDoc(docRef);
+    }
 
     // set given user
-    async setUser(userId, user) { }
+    async setUser(userId, user) {
+        const docRef = doc(this.firestore, this.USERS_PATH + "/" + userId);
+        user.clean();
+        Object.setPrototypeOf(user, Object.prototype);
+        await setDoc(docRef, user);
+        Object.setPrototypeOf(user, User.prototype);
+    }
 
     // get all users
-    async getAllUsers() { }
+    async getAllUsers() {
+        const collectionRef = collection(this.firestore, this.USERS_PATH);
+        const snap = await getDocs(query(collectionRef));
+
+        let users = [];
+
+        snap.forEach(
+            (doc) => {
+                console.log(doc.id);
+                let user = doc.data();
+                Object.setPrototypeOf(user, User.prototype);
+                // console.log(user);
+                users.push(user);
+            }
+        );
+
+        return users;
+    }
 
     // get user at given id, with his reviews and with the reviewed locations if specified
-    async getUser(userId, withReviews, withLocations) { }
+    async getUser(userId, withReviews, withLocations) {
+        const docRef = doc(this.firestore, this.USERS_PATH + "/" + userId);
+        const user = (await getDoc(docRef)).data();
+        if (user == undefined) {
+            throw (`User with id ${userId} not found`);
+        }
+
+        Object.setPrototypeOf(user, User.prototype);
+
+        if (withReviews) {
+            let reviews = await this.getReviewsOfUser(userId, withLocations);
+            user.addReviews(reviews);
+        }
+        return user;
+    }
 
     // get review at given id, with user and reviewed location if specified
-    async getReview(reviewId, withUser, withLocation) { }
+    async getReview(reviewId, withUser, withLocation) {
+        const docRef = doc(this.firestore, this.REVIEWS_PATH + "/" + reviewId);
+        const review = (await getDoc(docRef)).data();
+        if (review == undefined) {
+            throw (`Review with id ${reviewId} not found`);
+        }
+
+        Object.setPrototypeOf(review, Review.prototype);
+
+        if (withUser) {
+            let user = await this.getUser(review.userId, false, false);
+            review.addUser(user);
+        }
+
+        if (withLocation) {
+            let location = await this.getLocation(review.locationId, false, false);
+            review.addLocation(location);
+        }
+
+        return review;
+    }
 }
