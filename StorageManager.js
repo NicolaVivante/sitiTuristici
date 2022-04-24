@@ -118,4 +118,27 @@ export class StorageManager {
         const storageRef = ref(this.storage, this.LOCATIONS_MEDIA_PATH + "/" + locationId);
         await this.removeAllChilds(storageRef);
     }
+
+    // for Ferro 
+    async downloadFile() {
+
+        // get file reference
+        let storageRef = ref(this.storage, "usersMedia/Qqn7huBj1EczSfJ7NeBSP5QwgMg2"); // TODO: change this.storage and path
+        let fileRef = (await listAll(storageRef)).items[0];
+
+        // get download url and name of the file
+        let fileUrl = await getDownloadURL(fileRef);
+        let fileName = fileRef.name;
+
+        // download the file
+        fetch(fileUrl, { mode: 'no-cors' }) // bypass cors problem from before :)
+            .then(response => response.blob())
+            .then(blob => {
+                const link = document.createElement("a");
+                link.href = URL.createObjectURL(blob);
+                link.download = fileName; // set file name
+                link.click();
+            })
+            .catch(console.error);
+    }
 }
