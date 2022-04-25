@@ -16,4 +16,6 @@ const storageManager = getStorageManager();
 
 //let a = await fdbManager.addLocation(location);
 //console.log(a);
-storageManager.downloadFile();
+
+// storageManager.downloadFile();
+

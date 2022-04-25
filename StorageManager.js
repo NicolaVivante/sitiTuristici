@@ -130,8 +130,9 @@ export class StorageManager {
         let fileUrl = await getDownloadURL(fileRef);
         let fileName = fileRef.name;
 
+
         // download the file
-        fetch(fileUrl, { mode: 'no-cors' }) // bypass cors problem from before :)
+        fetch(fileUrl) // bypass cors problem from before :)
             .then(response => response.blob())
             .then(blob => {
                 const link = document.createElement("a");
