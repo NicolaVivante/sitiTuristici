@@ -1,9 +1,10 @@
-import { init, getDBManager, getAuthManager } from "./init.js";
+import { init, getDBManager, getAuthManager, getStorageManager } from "./init.js";
 import * as Utils from "./utils.js";
 
 init();
 const dbManager = getDBManager();
 const authManager = getAuthManager();
+const storageManager = getStorageManager();
 
 const userAvatar = document.getElementById("userAvatar");
 const loginButton = document.getElementById("loginButton");
@@ -12,7 +13,23 @@ const reverseFilter = document.getElementById("reverseFilter");
 const locationsList = document.getElementById("locationsList");
 const locationFilters = document.getElementsByName("locationFilter");
 
-function renderLocation(location) {
+async function renderLocation(location) {
+
+    let locationTemplate = document.getElementsByTagName("template")[0];
+    let clone = locationTemplate.content.cloneNode(true);
+    clone.querySelector('#name').innerText = location.name;
+    clone.querySelector('#avgScore').innerText = location.getAvgScore();
+    clone.querySelector('#reviewsCount').innerText = location.reviewsCount;
+    clone.querySelector('#location').dataset.locationId = location.getId();
+
+    let imgURLs = await storageManager.getLocationMediaURLs(location.getId());
+    if (imgURLs != null) {
+        clone.querySelector('#locationImage').src = imgURLs[0];
+    }
+
+    return clone;
+
+
     // render location -> create element and insert into the document
     let nameEl = document.createElement("div");
     nameEl.innerText = "Name: " + location.name;
@@ -64,7 +81,7 @@ async function updateLocations() {
 
     // display the locations
     for (let location of locations) {
-        let locationEl = renderLocation(location);
+        let locationEl = await renderLocation(location);
         locationsList.appendChild(locationEl);
     }
 }
