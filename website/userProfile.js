@@ -22,7 +22,7 @@ let userId;
 
 async function displayUser(user) {
     // display user data
-    usernameLabel.innerText = "Username: " + user.name;
+    usernameLabel.innerText = user.name;
     userImage.src = await Utils.getUserImage(userId);
     userImage.style.width = '100px';
     updateReviews();
