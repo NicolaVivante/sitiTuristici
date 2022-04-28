@@ -17,9 +17,6 @@
         crossorigin="anonymous"></script>
     <!-- user button -> user logo -->
     <!-- login / logout button -->
-    <img id="userAvatar"></img>
-    <button id="loginButton">LOG IN</button>
-    <button id="logoutButton">LOG OUT</button>
     <br>
     <br>
 
@@ -46,7 +43,13 @@
         <div class="row d-flex justify-content-center">
             <div class="col-md-7">
                 <div class="card p-3 py-4">
-                    <div id="description"></div>
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                        <img id="userAvatar" class="rounded-circle"></img>
+                    </div>
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                        <button id="loginButton" class="btn btn-primary me-md-2">LOG IN</button>
+                        <button id="logoutButton" class="btn btn-primary me-md-2">LOG OUT</button>
+                    </div>
                     <div class="text-center mt-3">
                         <h5 class="mt-2 mb-0">All reviews</h5>
                         <form id="filters">
@@ -63,14 +66,102 @@
                         </span>
                     </div>
                     <div id="locationsList"></div>
-                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                        <button class="btn btn-primary me-md-2" id="toHomeButton">TO HOME PAGE</button>
-                    </div>
+
                 </div>
             </div>
         </div>
     </div>
-    </div>s
+    </div>
+
+    <style>
+        body {
+            background: #eee
+        }
+
+        .card {
+            border: none;
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            cursor: pointer
+        }
+
+        .reviewCard {
+            border: none;
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            cursor: pointer;
+            background-color: #6679cc;
+        }
+
+        .card:before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 4px;
+            height: 100%;
+            background-color: #E1BEE7;
+            transform: scaleY(1);
+            transition: all 0.5s;
+            transform-origin: bottom
+        }
+
+        .card:after {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 4px;
+            height: 100%;
+            background-color: #8E24AA;
+            transform: scaleY(0);
+            transition: all 0.5s;
+            transform-origin: bottom
+        }
+
+        .card:hover::after {
+            transform: scaleY(1)
+        }
+
+        .fonts {
+            font-size: 11px
+        }
+
+        .social-list {
+            display: flex;
+            list-style: none;
+            justify-content: center;
+            padding: 0
+        }
+
+        .social-list li {
+            padding: 10px;
+            color: #8E24AA;
+            font-size: 19px
+        }
+
+        .buttons button:nth-child(1) {
+            border: 1px solid #8E24AA !important;
+            color: #8E24AA;
+            height: 40px
+        }
+
+        .buttons button:nth-child(1):hover {
+            border: 1px solid #8E24AA !important;
+            color: #fff;
+            height: 40px;
+            background-color: #8E24AA
+        }
+
+        .buttons button:nth-child(2) {
+            border: 1px solid #8E24AA !important;
+            background-color: #8E24AA;
+            color: #fff;
+            height: 40px
+        }
+    </style>
 
     <!-- mappa delle location -->
 

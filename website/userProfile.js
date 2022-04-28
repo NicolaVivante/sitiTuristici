@@ -83,8 +83,8 @@ function renderReview(review) {
 
     let locationTemplate = document.getElementsByTagName("template")[0];
     let clone = locationTemplate.content.cloneNode(true);
-    clone.querySelector('#title').innerText = review.title;
-    clone.querySelector('#score').innerText = review.score;
+    clone.querySelector('#title').innerText = "Title: " + review.title;
+    clone.querySelector('#score').innerText = "Score: " + review.score;
     clone.querySelector('#date').innerText = Utils.timestampToDate(review.timestamp);
     clone.querySelector('#review').dataset.reviewId = review.getId();
     clone.querySelector('#review').onclick = Utils.toReview;

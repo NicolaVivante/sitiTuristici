@@ -17,9 +17,9 @@ async function renderLocation(location) {
 
     let locationTemplate = document.getElementsByTagName("template")[0];
     let clone = locationTemplate.content.cloneNode(true);
-    clone.querySelector('#name').innerText = location.name;
-    clone.querySelector('#avgScore').innerText = location.getAvgScore();
-    clone.querySelector('#reviewsCount').innerText = location.reviewsCount;
+    clone.querySelector('#name').innerText = "Name: " + location.name;
+    clone.querySelector('#avgScore').innerText = "Average Score: " + location.getAvgScore();
+    clone.querySelector('#reviewsCount').innerText = "Reviews Count: " + location.reviewsCount;
     clone.querySelector('#location').dataset.locationId = location.getId();
     clone.querySelector('#location').onclick = Utils.toLocation;
 
@@ -78,7 +78,6 @@ async function updateLocations() {
 
     // clear location list
     locationsList.innerHTML = '';
-    locationsList.style.border = "thick solid #0000FF";
 
     // display the locations
     for (let location of locations) {

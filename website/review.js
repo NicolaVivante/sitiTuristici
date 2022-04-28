@@ -48,7 +48,7 @@ async function displayReview(review) {
         for (let mediaURL of mediaURLs) {
             let imgEl = document.createElement("img");
             imgEl.src = mediaURL;
-            imgEl.style.width = '300px';
+            imgEl.style.width = '200px';
             mediaEl.appendChild(imgEl);
         }
     }
