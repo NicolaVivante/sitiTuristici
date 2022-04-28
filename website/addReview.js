@@ -33,15 +33,13 @@ reviewForm.onsubmit = async function (event) {
 
     const reviewId = await dbManager.addReview(review);
 
-    // if (reviewMediaEl.files.length > 0) {
-    //     for (let file of reviewMediaEl.files) {
-    //         // upload file and get its URL
-    //         await storageManager.uploadReviewMedia(reviewId, file);
-    //         const mediaURL = (await storageManager.getReviewMediaURLs(reviewId, file.name));
-    //         review.addMedia(mediaURL);
-    //     }
-    // }
-    // await dbManager.setReview(reviewId, review);
+    if (reviewMediaEl.files.length > 0) {
+        for (let file of reviewMediaEl.files) {
+            // upload file and get its URL
+            await storageManager.uploadReviewMedia(reviewId, file);
+        }
+    }
+
     Utils.toHomePage();
 }
 
