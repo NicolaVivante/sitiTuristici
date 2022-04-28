@@ -29,27 +29,6 @@ async function renderLocation(location) {
     }
 
     return clone;
-
-
-    // render location -> create element and insert into the document
-    let nameEl = document.createElement("div");
-    nameEl.innerText = "Name: " + location.name;
-    let scoreEl = document.createElement("div");
-    scoreEl.innerText = "Average score: " + location.getAvgScore();
-    let revCountEl = document.createElement("div");
-    revCountEl.innerText = "Reviews: " + location.reviewsCount;
-    let locationEl = document.createElement("div");
-
-    locationEl.dataset.locationId = location.getId();
-    locationEl.onclick = Utils.toLocation;
-    locationEl.appendChild(nameEl);
-    locationEl.appendChild(scoreEl);
-    locationEl.appendChild(revCountEl);
-    locationEl.appendChild(document.createElement("br"));
-
-    return locationEl;
-
-    // console.log(`${location.name}, average score: ${location.getAvgScore()}, number of reviews: ${location.reviewsCount}`);
 }
 
 async function updateLocations() {
