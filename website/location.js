@@ -41,9 +41,9 @@ function renderReview(review) {
 
 async function displayLocation(location) {
     // render base properties
-    nameEl.innerText = "Name: " + location.name;
-    avgScoreEl.innerText = "Average score: " + location.getAvgScore();
-    revCountEl.innerText = "Number of reviews: " + location.reviewsCount;
+    nameEl.innerText = location.name;
+    avgScoreEl.innerText = location.getAvgScore();
+    revCountEl.innerText = location.reviewsCount;
 
     // render optional properties
     if (location.getDescription() != undefined) {
