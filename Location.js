@@ -20,7 +20,7 @@ export class Location {
         if (this.reviewsCount == 0) {
             return 0;
         }
-        return this.reviewsScoreSum / this.reviewsCount;
+        return (this.reviewsScoreSum / this.reviewsCount).toFixed(1);
     }
 
     addReviews(reviews) {
