@@ -96,29 +96,6 @@ function renderReview(review) {
     }
 
     return clone;
-    // let titleEl = document.createElement("div");
-    // titleEl.innerText = "Title: " + review.title;
-    // let scoreEl = document.createElement("div");
-    // scoreEl.innerText = "Score: " + review.score;
-    // let locationEl = document.createElement("div");
-    // locationEl.innerText = "Location: " + review.getLocation().name;
-
-    // let reviewEl = document.createElement("div");
-    // reviewEl.dataset.reviewId = review.getId();
-    // reviewEl.onclick = Utils.toReview;
-    // reviewEl.appendChild(titleEl);
-    // reviewEl.appendChild(scoreEl);
-    // reviewEl.appendChild(locationEl);
-
-    // if (canDelete) {
-    //     let deleteButton = document.createElement("button");
-    //     deleteButton.dataset.reviewId = review.getId();
-    //     deleteButton.innerText = "DELETE";
-    //     deleteButton.onclick = deleteReview;
-    //     reviewEl.appendChild(deleteButton);
-    // }
-
-    // return reviewEl;
 }
 
 async function deleteReview(event) {

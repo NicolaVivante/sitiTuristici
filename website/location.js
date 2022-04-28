@@ -29,27 +29,6 @@ async function renderReview(review) {
 
     clone.querySelector('#review').dataset.reviewId = review.getId();
     clone.querySelector('#review').onclick = Utils.toReview;
-
-    //document.body.appendChild(clone);
-
-    // let titleEl = document.createElement("div");
-    // titleEl.innerText = "Title: " + review.title;
-    // let scoreEl = document.createElement("div");
-    // scoreEl.innerText = "Score: " + review.score;
-    // let userEl = document.createElement("div");
-    // userEl.innerText = "User: " + review.getUser().name;
-    // let dateEl = document.createElement("div");
-    // dateEl.innerText = "Date: " + Utils.timestampToDate(review.timestamp);
-    // let reviewEl = document.createElement("div");
-
-    // reviewEl.dataset.reviewId = review.getId();
-    // reviewEl.onclick = Utils.toReview;
-    // reviewEl.appendChild(titleEl);
-    // reviewEl.appendChild(scoreEl);
-    // reviewEl.appendChild(userEl);
-    // reviewEl.appendChild(dateEl);
-    // reviewEl.appendChild(document.createElement("br"));
-
     return clone;
 }
 
