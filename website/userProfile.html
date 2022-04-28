@@ -78,21 +78,19 @@
                     <div class="text-center"> <img id="userImage" width="100" class="rounded-circle"> </div>
                     <div class="text-center mt-3">
                         <div>
-                            <button class="btn btn-primary me-md-2" id="changeImgButton" style="display: none">CHANGE
+                            <button class="btn btn-primary me-md-2" id="changeImgButton">CHANGE
                                 IMAGE</button>
-                            <button class="btn btn-primary me-md-2" id="deleteImgButton" style="display: none">DELETE
+                            <button class="btn btn-primary me-md-2" id="deleteImgButton">DELETE
                                 IMAGE</button>
-                            <input type="file" accept="image/*" id="imageInput" style="display: none" />
+                            <input type="file" accept="image/*" id="imageInput" style="display: none;" />
                         </div>
                         <h5 class="mt-2 mb-0"><label id="username"></label></h5>
+                        <input type="text" id="usernameInput" hidden pattern="[A-Za-z0-9]{1,20}"
+                            class="w-50 p-2 mx-sm-5 form-control">
+
                         <div class="row">
                             <div class="col">
-                                <input type="text" id="usernameInput" style="display: none;" pattern="[A-Za-z0-9]{1,20}"
-                                    class="w-50 p-2 mx-sm-5 form-control">
-                            </div>
-                            <div class="col">
-                                <button class="btn btn-primary me-md-2" id="changeNameButton"
-                                    style="display: none;">change
+                                <button class="btn btn-primary me-md-2" id="changeNameButton">change
                                     name</button>
                             </div>
                             <div class="px-4 mt-1">
