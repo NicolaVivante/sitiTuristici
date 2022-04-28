@@ -21,6 +21,7 @@ async function renderLocation(location) {
     clone.querySelector('#avgScore').innerText = location.getAvgScore();
     clone.querySelector('#reviewsCount').innerText = location.reviewsCount;
     clone.querySelector('#location').dataset.locationId = location.getId();
+    clone.querySelector('#location').onclick = Utils.toLocation;
 
     let imgURLs = await storageManager.getLocationMediaURLs(location.getId());
     if (imgURLs != null) {
