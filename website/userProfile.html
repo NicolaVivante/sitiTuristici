@@ -49,6 +49,28 @@
     <!-- lista delle review 
     <div id="reviewsList"></div>
         -->
+
+
+    <!-- review template -->
+    <template>
+        <div class="reviewCard">
+            <div class="container">
+                <div id="review" class="row">
+                    <div class="col">
+                        <div id="title"></div>
+                        <div id="score"></div>
+                        <div id="date"></div>
+                    </div>
+                    <div class="col">
+                        <button class="btn btn-primary me-md-2" id="removeButton">REMOVE</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+    </template>
+
+
     <div class="container mt-5">
         <div class="row d-flex justify-content-center">
             <div class="col-md-7">
@@ -138,6 +160,15 @@
 
             .card:hover::after {
                 transform: scaleY(1)
+            }
+
+            .reviewCard {
+                border: none;
+                position: relative;
+                overflow: hidden;
+                border-radius: 8px;
+                cursor: pointer;
+                background-color: #6679cc;
             }
 
             .fonts {

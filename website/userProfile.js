@@ -80,29 +80,45 @@ function getReviewsFilter() {
 }
 
 function renderReview(review) {
-    let titleEl = document.createElement("div");
-    titleEl.innerText = "Title: " + review.title;
-    let scoreEl = document.createElement("div");
-    scoreEl.innerText = "Score: " + review.score;
-    let locationEl = document.createElement("div");
-    locationEl.innerText = "Location: " + review.getLocation().name;
 
-    let reviewEl = document.createElement("div");
-    reviewEl.dataset.reviewId = review.getId();
-    reviewEl.onclick = Utils.toReview;
-    reviewEl.appendChild(titleEl);
-    reviewEl.appendChild(scoreEl);
-    reviewEl.appendChild(locationEl);
+    let locationTemplate = document.getElementsByTagName("template")[0];
+    let clone = locationTemplate.content.cloneNode(true);
+    clone.querySelector('#title').innerText = review.title;
+    clone.querySelector('#score').innerText = review.score;
+    clone.querySelector('#date').innerText = Utils.timestampToDate(review.timestamp);
+    clone.querySelector('#review').dataset.reviewId = review.getId();
+    clone.querySelector('#review').onclick = Utils.toReview;
 
     if (canDelete) {
-        let deleteButton = document.createElement("button");
+        let deleteButton = clone.querySelector('#removeButton');
         deleteButton.dataset.reviewId = review.getId();
-        deleteButton.innerText = "DELETE";
         deleteButton.onclick = deleteReview;
-        reviewEl.appendChild(deleteButton);
     }
 
-    return reviewEl;
+    return clone;
+    // let titleEl = document.createElement("div");
+    // titleEl.innerText = "Title: " + review.title;
+    // let scoreEl = document.createElement("div");
+    // scoreEl.innerText = "Score: " + review.score;
+    // let locationEl = document.createElement("div");
+    // locationEl.innerText = "Location: " + review.getLocation().name;
+
+    // let reviewEl = document.createElement("div");
+    // reviewEl.dataset.reviewId = review.getId();
+    // reviewEl.onclick = Utils.toReview;
+    // reviewEl.appendChild(titleEl);
+    // reviewEl.appendChild(scoreEl);
+    // reviewEl.appendChild(locationEl);
+
+    // if (canDelete) {
+    //     let deleteButton = document.createElement("button");
+    //     deleteButton.dataset.reviewId = review.getId();
+    //     deleteButton.innerText = "DELETE";
+    //     deleteButton.onclick = deleteReview;
+    //     reviewEl.appendChild(deleteButton);
+    // }
+
+    // return reviewEl;
 }
 
 async function deleteReview(event) {
@@ -140,7 +156,6 @@ function updateReviews() {
     for (let review of reviews) {
         let reviewEl = renderReview(review);
         reviewsList.appendChild(reviewEl);
-        reviewsList.appendChild(document.createElement("br"));
     }
 }
 
