@@ -60,6 +60,7 @@ async function updateLocations() {
 
     // clear location list
     locationsList.innerHTML = '';
+    locationsList.style.border = "thick solid #0000FF";
 
     // display the locations
     for (let location of locations) {
