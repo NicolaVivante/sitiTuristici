@@ -17,26 +17,40 @@ const reverseFilter = document.getElementById("reverseFilter");
 const reviewFilters = document.getElementsByName("reviewFilter");
 const addReviewButton = document.getElementById("addReview");
 
-function renderReview(review) {
-    let titleEl = document.createElement("div");
-    titleEl.innerText = "Title: " + review.title;
-    let scoreEl = document.createElement("div");
-    scoreEl.innerText = "Score: " + review.score;
-    let userEl = document.createElement("div");
-    userEl.innerText = "User: " + review.getUser().name;
-    let dateEl = document.createElement("div");
-    dateEl.innerText = "Date: " + Utils.timestampToDate(review.timestamp);
-    let reviewEl = document.createElement("div");
+async function renderReview(review) {
 
-    reviewEl.dataset.reviewId = review.getId();
-    reviewEl.onclick = Utils.toReview;
-    reviewEl.appendChild(titleEl);
-    reviewEl.appendChild(scoreEl);
-    reviewEl.appendChild(userEl);
-    reviewEl.appendChild(dateEl);
-    reviewEl.appendChild(document.createElement("br"));
+    let locationTemplate = document.getElementsByTagName("template")[0];
+    let clone = locationTemplate.content.cloneNode(true);
+    clone.querySelector('#title').innerText = review.title;
+    clone.querySelector('#score').innerText = review.score;
+    clone.querySelector('#userImage').src = await Utils.getUserImage(review.userId);
+    clone.querySelector('#userImage').title = review.getUser().name;
+    clone.querySelector('#date').innerText = Utils.timestampToDate(review.timestamp);
 
-    return reviewEl;
+    clone.querySelector('#review').dataset.reviewId = review.getId();
+    clone.querySelector('#review').onclick = Utils.toReview;
+
+    //document.body.appendChild(clone);
+
+    // let titleEl = document.createElement("div");
+    // titleEl.innerText = "Title: " + review.title;
+    // let scoreEl = document.createElement("div");
+    // scoreEl.innerText = "Score: " + review.score;
+    // let userEl = document.createElement("div");
+    // userEl.innerText = "User: " + review.getUser().name;
+    // let dateEl = document.createElement("div");
+    // dateEl.innerText = "Date: " + Utils.timestampToDate(review.timestamp);
+    // let reviewEl = document.createElement("div");
+
+    // reviewEl.dataset.reviewId = review.getId();
+    // reviewEl.onclick = Utils.toReview;
+    // reviewEl.appendChild(titleEl);
+    // reviewEl.appendChild(scoreEl);
+    // reviewEl.appendChild(userEl);
+    // reviewEl.appendChild(dateEl);
+    // reviewEl.appendChild(document.createElement("br"));
+
+    return clone;
 }
 
 async function displayLocation(location) {
@@ -72,7 +86,7 @@ function getReviewsFilter() {
     }
 }
 
-function updateReviews() {
+async function updateReviews() {
     // get filter and reverse options
     const filter = getReviewsFilter();
     const reverse = reverseFilter.checked;
@@ -97,7 +111,7 @@ function updateReviews() {
 
     // render reviews
     for (let review of reviews) {
-        let reviewEl = renderReview(review);
+        let reviewEl = await renderReview(review);
         reviewsList.appendChild(reviewEl);
     }
 }
