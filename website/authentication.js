@@ -7,7 +7,7 @@ init();
 const dbManager = getDBManager();
 const authManager = getAuthManager();
 
-const homeButton = document.getElementById("toHomeButton");
+const homeButtons = document.getElementsByName("toHomeButton");
 const logOptions = document.getElementById("logOptions");
 
 const loginForm = document.getElementById("loginForm");
@@ -91,7 +91,9 @@ async function register(event) {
 }
 
 // assign callbacks
-homeButton.onclick = Utils.toHomePage;
+for (let homeButton of homeButtons) {
+    homeButton.onclick = Utils.toHomePage;
+}
 logOptions.onchange = updateLogOptions;
 loginForm.onsubmit = login;
 registerForm.onsubmit = register;
