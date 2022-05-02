@@ -30,8 +30,8 @@ export function getAuthManager() {
 
 export function getDBManager() {
     const app = initializeApp(firebaseConfig);
-    // return new RealtimeDBManager(app);
-    return new FirestoreDBManager(app);
+    return new RealtimeDBManager(app);
+    // return new FirestoreDBManager(app);
 }
 
 export function getStorageManager() {
