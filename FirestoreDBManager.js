@@ -2,6 +2,7 @@ import { getFirestore, collection, doc, addDoc, setDoc, getDoc, deleteDoc, query
 import { DBManager } from "./DBManager.js";
 import { Location } from "./Location.js";
 import { Review } from "./Review.js";
+import { User } from "./user.js";
 
 export class FirestoreDBManager extends DBManager {
 
