@@ -18,7 +18,7 @@ export class FirestoreDBManager extends DBManager {
     // add given location to locations list and return the location id
     async addLocation(location) {
         const collectionRef = collection(this.firestore, this.LOCATIONS_PATH);
-        location.clean();
+        location.clear();
         Object.setPrototypeOf(location, Object.prototype);
         const id = (await addDoc(collectionRef, location)).id;
         Object.setPrototypeOf(location, Location.prototype);
@@ -34,7 +34,7 @@ export class FirestoreDBManager extends DBManager {
     // set location at given id
     async setLocation(locationId, location) {
         const docRef = doc(this.firestore, this.LOCATIONS_PATH + "/" + locationId);
-        location.clean();
+        location.clear();
         Object.setPrototypeOf(location, Object.prototype);
         await setDoc(docRef, location);
         Object.setPrototypeOf(location, Location.prototype);
@@ -134,7 +134,7 @@ export class FirestoreDBManager extends DBManager {
     // add given review to review list and return the review id
     async addReview(review) {
         const collectionRef = collection(this.firestore, this.REVIEWS_PATH);
-        review.clean();
+        review.clear();
         Object.setPrototypeOf(review, Object.prototype);
         const id = (await addDoc(collectionRef, review)).id;
         Object.setPrototypeOf(review, Review.prototype);
@@ -150,7 +150,7 @@ export class FirestoreDBManager extends DBManager {
     // set given user
     async setUser(userId, user) {
         const docRef = doc(this.firestore, this.USERS_PATH + "/" + userId);
-        user.clean();
+        user.clear();
         Object.setPrototypeOf(user, Object.prototype);
         await setDoc(docRef, user);
         Object.setPrototypeOf(user, User.prototype);

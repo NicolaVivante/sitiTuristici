@@ -21,7 +21,7 @@ export class RealtimeDBManager extends DBManager {
 
     async addLocation(location) {
         let locationsRef = ref(this.db, this.LOCATIONS_PATH);
-        location.clean();
+        location.clear();
         return push(locationsRef, location).key;
     }
 
@@ -33,7 +33,7 @@ export class RealtimeDBManager extends DBManager {
     async setLocation(locationId, location) {
         // set location at given id
         let locationRef = ref(this.db, this.LOCATIONS_PATH + "/" + locationId);
-        location.clean();
+        location.clear();
         await set(locationRef, location);
     }
 
@@ -134,7 +134,7 @@ export class RealtimeDBManager extends DBManager {
 
         // add review and return id
         let reviewsRef = ref(this.db, this.REVIEWS_PATH);
-        review.clean();
+        review.clear();
         return push(reviewsRef, review).key;
     }
 

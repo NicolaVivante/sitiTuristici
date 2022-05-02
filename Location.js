@@ -11,7 +11,7 @@ export class Location {
         this.reviewsScoreSum = 0;
     }
 
-    clean() {
+    clear() {
         this["reviews"] = null;
         this["id"] = null;
     }

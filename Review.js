@@ -16,7 +16,7 @@ export class Review {
         this.timestamp = Date.now();
     }
 
-    clean() {
+    clear() {
         this["user"] = null;
         this["id"] = null;
         this["location"] = null;
